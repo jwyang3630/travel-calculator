@@ -499,13 +499,45 @@ function render(){
   }
   if(peak.is) h+=`<div class="tip tip-amber" style="margin-top:8px">⚠️ 성수기엔 항공권을 <strong>최소 2~3개월 전</strong>에 예약하세요. 일찍 예약할수록 저렴합니다!</div>`;
 
-  h+=`<div class="aff-box" style="margin-top:16px">
-    <span>✈️ ${tots.map(c=>c.flag+c.name).join(' · ')} 항공권 최저가 비교</span>
-    <button class="aff-btn" onclick="window.open('https://www.skyscanner.co.kr','_blank')">최저가 검색 →</button>
+  const TRIP_HOTEL={
+    '도쿄':'https://www.trip.com/t/dbCg9RmUEV2',
+    '후쿠오카':'https://www.trip.com/t/cuOpRcqUEV2',
+    '오사카':'https://www.trip.com/t/fwcWTVsUEV2',
+    '나트랑':'https://www.trip.com/t/5jKU10yUEV2',
+    '발리':'https://www.trip.com/t/w41f3IzUEV2',
+    '다낭':'https://www.trip.com/t/XQjQOj3VEV2',
+    '방콕':'https://www.trip.com/t/fjPraQ4VEV2',
+    '삿포로':'https://www.trip.com/t/zShht85VEV2',
+    '타이베이':'https://www.trip.com/t/kkEK9t5VEV2',
+    '괌':'https://www.trip.com/t/uOx2417VEV2',
+  };
+  const TRIP_FLIGHT={
+    '도쿄':'https://www.trip.com/t/9VrEvJMVEV2',
+    '후쿠오카':'https://www.trip.com/t/Z72XhINVEV2',
+    '오사카':'https://www.trip.com/t/W6mcLMPVEV2',
+    '나트랑':'https://www.trip.com/t/kWLyIeQVEV2',
+    '발리':'https://www.trip.com/t/KZBU7oRVEV2',
+    '다낭':'https://www.trip.com/t/U0cNabSVEV2',
+    '방콕':'https://www.trip.com/t/GLekqATVEV2',
+    '삿포로':'https://www.trip.com/t/Tc3cwpTVEV2',
+    '타이베이':'https://www.trip.com/t/ytygxMVVEV2',
+    '괌':'https://www.trip.com/t/BVTwT8WVEV2',
+  };
+  const hotelBtns=tots.map(c=>{
+    const link=TRIP_HOTEL[c.name]||'https://www.trip.com';
+    return `<button class="aff-btn" style="background:${c.p.s};margin:3px;font-size:12px;padding:6px 12px" onclick="window.open('${link}','_blank')">${c.flag} ${c.name} 숙소 →</button>`;
+  }).join('');
+  const flightBtns=tots.map(c=>{
+    const link=TRIP_FLIGHT[c.name]||'https://www.trip.com';
+    return `<button class="aff-btn" style="background:${c.p.s};margin:3px;font-size:12px;padding:6px 12px" onclick="window.open('${link}','_blank')">${c.flag} ${c.name} 항공권 →</button>`;
+  }).join('');
+  h+=`<div class="aff-box" style="margin-top:16px;flex-direction:column;align-items:flex-start">
+    <span>✈️ 서울 출발 항공권 최저가 (트립닷컴)</span>
+    <div style="display:flex;flex-wrap:wrap;margin-top:8px">${flightBtns}</div>
   </div>
-  <div class="aff-box">
-    <span>🏨 이 예산대 숙소 찾기</span>
-    <button class="aff-btn" onclick="window.open('https://www.agoda.com/ko-kr','_blank')">숙소 보기 →</button>
+  <div class="aff-box" style="margin-top:8px;flex-direction:column;align-items:flex-start">
+    <span>🏨 선택한 여행지 숙소 최저가 (트립닷컴)</span>
+    <div style="display:flex;flex-wrap:wrap;margin-top:8px">${hotelBtns}</div>
   </div>`;
 
   rEl.innerHTML=h;
