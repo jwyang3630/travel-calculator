@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한국인 여행 예산 계산기 | 실시간 환율 · 성수기 반영</title>
+<meta name="description" content="일본, 동남아, 괌 등 한국인 인기 여행지 10곳의 항공료·숙박·식비를 실시간 환율로 비교하세요. 성수기/비수기, 인원수별 총비용 자동 계산.">
+<meta name="keywords" content="여행경비계산기, 해외여행예산, 일본여행비용, 다낭여행경비, 발리여행비용, 방콕여행경비, 괌여행비용, 성수기항공료, 여행예산계획">
+<meta property="og:title" content="한국인 여행 예산 계산기">
+<meta property="og:description" content="인기 여행지 10곳 실시간 환율 · 성수기 자동 반영 · 인원별 총비용">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --c-bg: #F7F8FA;
+  --c-card: #FFFFFF;
+  --c-border: #E8ECF0;
+  --c-text: #1A1D23;
+  --c-sub: #6B7280;
+  --c-info: #1971C2;
+  --c-info-bg: #E7F5FF;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  background: var(--c-bg);
+  color: var(--c-text);
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #0F1923 0%, #1B2F45 60%, #0F3460 100%);
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(25,113,194,0.25) 0%, transparent 60%);
+}
+.hero-emoji { font-size: 40px; display: block; margin-bottom: 12px; position: relative; }
+.hero h1 {
+  font-size: clamp(22px, 5vw, 32px);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.25;
+  margin-bottom: 8px;
+  position: relative;
+}
+.hero h1 span { color: #74C0FC; }
+.hero p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  position: relative;
+}
+
+/* ── RATE BAR ── */
+.rate-bar {
+  background: var(--c-card);
+  border-bottom: 1px solid var(--c-border);
+  padding: 10px 24px;
+  font-size: 12px;
+  color: var(--c-sub);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.rate-bar strong { color: var(--c-text); }
+.rate-live { background: #EBFBEE; color: #2F9E44; font-size: 10px; padding: 2px 7px; border-radius: 99px; font-weight: 600; }
+.rate-fallback { background: #FFF3CD; color: #856404; font-size: 10px; padding: 2px 7px; border-radius: 99px; }
+
+/* ── MAIN ── */
+.main { max-width: 720px; margin: 0 auto; padding: 24px 16px 60px; }
+
+/* ── SECTION LABEL ── */
+.slabel { font-size: 11px; font-weight: 600; color: var(--c-sub); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 10px; }
+
+/* ── CITY GRID ── */
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.city-btn {
+  padding: 10px 6px;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+  background: var(--c-card);
+  color: var(--c-text);
+  text-align: center;
+  transition: all 0.15s;
+  line-height: 1.4;
+  font-family: inherit;
+}
+.city-btn:hover { border-color: #ADB5BD; }
+.city-btn .flag { font-size: 20px; display: block; margin-bottom: 3px; }
+.city-btn .cname { font-weight: 500; }
+.city-btn .rank { font-size: 10px; color: var(--c-sub); }
+
+/* ── CONTROLS ── */
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.fg { display: flex; flex-direction: column; gap: 6px; }
+.fg label { font-size: 12px; color: var(--c-sub); font-weight: 500; }
+.fg input, .fg select {
+  font-size: 14px; padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--c-border);
+  background: var(--c-card);
+  color: var(--c-text);
+  font-family: inherit;
+  transition: border-color .15s;
+}
+.fg input:focus, .fg select:focus { outline: none; border-color: var(--c-info); }
+
+/* ── PAX ── */
+.pax-section {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.pax-title { font-size: 12px; font-weight: 600; color: var(--c-sub); margin-bottom: 12px; letter-spacing: .04em; text-transform: uppercase; }
+.pax-rows { display: flex; gap: 24px; flex-wrap: wrap; }
+.pax-row { display: flex; align-items: center; gap: 10px; }
+.pax-label { font-size: 13px; color: var(--c-text); font-weight: 500; width: 36px; }
+.pax-ctrl { display: flex; align-items: center; gap: 8px; }
+.pax-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid var(--c-border);
+  background: var(--c-bg); cursor: pointer;
+  font-size: 16px; font-weight: 300;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--c-text); transition: all .15s; font-family: inherit;
+}
+.pax-btn:hover { border-color: var(--c-info); color: var(--c-info); }
+.pax-num { font-size: 16px; font-weight: 600; width: 22px; text-align: center; }
+.pax-note { font-size: 11px; color: var(--c-sub); margin-top: 10px; }
+
+/* ── PEAK NOTICE ── */
+.peak-notice {
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  font-size: 13px; margin-bottom: 20px; display: none;
+  border: 1px solid transparent;
+}
+.peak-notice.peak { display: block; background: #FFF8E1; color: #C07000; border-color: #FFE082; }
+.peak-notice.off  { display: block; background: #EBFBEE; color: #2F9E44; border-color: #B2F2BB; }
+
+/* ── METRIC CARDS ── */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px; margin-bottom: 20px;
+}
+.metric {
+  background: var(--c-card);
+  border-radius: var(--radius);
+  padding: 14px;
+  border-left: 4px solid transparent;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.metric .ml { font-size: 11px; color: var(--c-sub); margin-bottom: 4px; }
+.metric .mv { font-size: 20px; font-weight: 700; line-height: 1.1; }
+.metric .ms { font-size: 11px; color: var(--c-sub); margin-top: 4px; }
+.metric .mp { font-size: 11px; margin-top: 4px; font-weight: 500; }
+
+/* ── CHART CARD ── */
+.card {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.card h3 { font-size: 13px; font-weight: 600; color: var(--c-text); margin-bottom: 12px; }
+.legend { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.lc { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--c-sub); }
+.lc-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.brow { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+.bl { font-size: 12px; color: var(--c-sub); width: 70px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bt { flex: 1; height: 14px; background: var(--c-bg); border-radius: 4px; overflow: hidden; }
+.bf { height: 100%; border-radius: 4px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+.bv { font-size: 12px; color: var(--c-text); width: 105px; text-align: right; flex-shrink: 0; }
+.badge { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 99px; margin-left: 4px; vertical-align: middle; font-weight: 600; }
+.b-green { background: #EBFBEE; color: #2F9E44; }
+.b-amber { background: #FFF8E1; color: #C07000; }
+.b-red   { background: #FFF0F0; color: #E03131; }
+.b-peak  { background: #FFF0F0; color: #C92A2A; font-size: 10px; padding: 1px 6px; border-radius: 99px; margin-left: 4px; display: inline-block; font-weight: 600; }
+.cat-div { font-size: 11px; font-weight: 600; color: var(--c-sub); margin: 12px 0 7px; padding-bottom: 5px; border-bottom: 1px solid var(--c-border); }
+
+/* ── TIP ── */
+.tip {
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  font-size: 13px; margin-top: 10px;
+}
+.tip-blue { background: var(--c-info-bg); color: var(--c-info); }
+.tip-amber { background: #FFF8E1; color: #C07000; border: 1px solid #FFE082; }
+
+/* ── AFFILIATE ── */
+.aff-box {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-top: 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.aff-box span { font-size: 13px; color: var(--c-sub); }
+.aff-btn {
+  font-size: 13px; font-weight: 600;
+  padding: 7px 16px; border-radius: 7px;
+  border: none; cursor: pointer;
+  background: var(--c-info); color: #fff;
+  transition: opacity .15s; font-family: inherit;
+}
+.aff-btn:hover { opacity: .85; }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center; font-size: 11px; color: var(--c-sub);
+  padding: 24px 16px; border-top: 1px solid var(--c-border);
+  margin-top: 24px;
+}
+
+/* ── EMPTY ── */
+.empty { font-size: 14px; color: var(--c-sub); padding: 24px 0; text-align: center; }
+
+@media (max-width: 480px) {
+  .controls { grid-template-columns: 1fr; }
+  .hero { padding: 36px 16px 32px; }
+  .pax-rows { gap: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="hero-emoji">✈️</span>
+  <h1>한국인 <span>여행 예산</span> 계산기</h1>
+  <p>인기 여행지 10곳 · 실시간 환율 · 성수기 자동 반영 · 인원별 총비용</p>
+</div>
+
+<div class="rate-bar" id="rate-bar">💱 환율 불러오는 중...</div>
+
+<div class="main">
+
+  <!-- 여행지 -->
+  <div class="slabel">여행지 선택 (복수 가능)</div>
+  <div class="city-grid" id="city-grid"></div>
+
+  <!-- 날짜 + 기간 -->
+  <div class="controls">
+    <div class="fg"><label>출발 예정일</label><input type="date" id="depart-date"></div>
+    <div class="fg"><label>여행 기간 (일)</label><input type="number" id="days" value="5" min="1" max="30"></div>
+  </div>
+
+  <!-- 스타일 -->
+  <div class="controls" style="margin-bottom:20px">
+    <div class="fg"><label>여행 스타일</label>
+      <select id="style">
+        <option value="0">💰 가성비 (게스트하우스·로컬식당)</option>
+        <option value="1" selected>🏨 중간 (중급호텔·일반식당)</option>
+        <option value="2">✨ 럭셔리 (5성호텔·파인다이닝)</option>
+      </select>
+    </div>
+    <div class="fg"></div>
+  </div>
+
+  <!-- 성수기 알림 -->
+  <div class="peak-notice" id="peak-notice"></div>
+
+  <!-- 인원 -->
+  <div class="pax-section">
+    <div class="pax-title">👥 여행 인원</div>
+    <div class="pax-rows">
+      <div class="pax-row">
+        <span class="pax-label">성인</span>
+        <div class="pax-ctrl">
+          <button class="pax-btn" onclick="chgPax('adult',-1)">−</button>
+          <span class="pax-num" id="adult-num">2</span>
+          <button class="pax-btn" onclick="chgPax('adult',1)">+</button>
+        </div>
+      </div>
+      <div class="pax-row">
+        <span class="pax-label">아동</span>
+        <div class="pax-ctrl">
+          <button class="pax-btn" onclick="chgPax('child',-1)">−</button>
+          <span class="pax-num" id="child-num">0</span>
+          <button class="pax-btn" onclick="chgPax('child',1)">+</button>
+        </div>
+      </div>
+      <div class="pax-row">
+        <span class="pax-label">유아</span>
+        <div class="pax-ctrl">
+          <button class="pax-btn" onclick="chgPax('infant',-1)">−</button>
+          <span class="pax-num" id="infant-num">0</span>
+          <button class="pax-btn" onclick="chgPax('infant',1)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="pax-note">아동 항공 75% · 유아 항공 10% · 숙박 성인 기준 룸 공유 · 아동 식비 60% · 유아 무료</div>
+  </div>
+
+  <!-- 결과 -->
+  <div class="metric-grid" id="metrics"></div>
+  <div id="result"></div>
+
+  <footer>
+    ※ 본 계산기의 비용은 평균 참고값이며 실제 가격과 다를 수 있습니다.<br>
+    항공료·숙박은 예약 시기·항공사·호텔에 따라 크게 달라집니다.<br>
+    환율: Frankfurter API (ECB 기준) · 성수기 기간: 여름/겨울방학·설·추석·황금연휴 기준
+  </footer>
+</div>
+
+<script>
+// ── 팔레트 ────────────────────────────
+const PAL=[
+  {s:'#E03131',bg:'#FFF0F0',t:'#A61212'},
+  {s:'#1971C2',bg:'#E7F5FF',t:'#1050A0'},
+  {s:'#2F9E44',bg:'#EBFBEE',t:'#1A6B2A'},
+  {s:'#E67700',bg:'#FFF4E6',t:'#B35900'},
+  {s:'#9C36B5',bg:'#F8F0FC',t:'#6A1580'},
+  {s:'#0C8599',bg:'#E3FAFC',t:'#0A6070'},
+  {s:'#C2255C',bg:'#FFF0F6',t:'#8A1740'},
+  {s:'#5C7CFA',bg:'#EDF2FF',t:'#3451D1'},
+  {s:'#74B816',bg:'#F4FCE3',t:'#4A7A0A'},
+  {s:'#F76707',bg:'#FFF4E6',t:'#C44E00'},
+];
+
+// ── 도시 데이터 ────────────────────────
+const CITIES=[
+  {name:'도쿄',    flag:'🇯🇵',rank:'1위', country:'일본',       flight:[180,280,450],hotel:[70,140,350],food:[30,60,120],transport:[15,20,30]},
+  {name:'후쿠오카',flag:'🇯🇵',rank:'2위', country:'일본',       flight:[120,200,350],hotel:[55,110,280],food:[25,50,100],transport:[10,15,25]},
+  {name:'오사카',  flag:'🇯🇵',rank:'3위', country:'일본',       flight:[130,210,360],hotel:[60,120,300],food:[25,55,110],transport:[12,18,28]},
+  {name:'나트랑',  flag:'🇻🇳',rank:'4위', country:'베트남',     flight:[150,230,400],hotel:[30,70,200],food:[10,25,60], transport:[5,10,20]},
+  {name:'발리',    flag:'🇮🇩',rank:'5위', country:'인도네시아', flight:[200,320,500],hotel:[40,90,250],food:[15,35,90], transport:[8,15,30]},
+  {name:'다낭',    flag:'🇻🇳',rank:'6위', country:'베트남',     flight:[140,220,380],hotel:[25,65,180],food:[10,22,55], transport:[5,10,18]},
+  {name:'방콕',    flag:'🇹🇭',rank:'7위', country:'태국',       flight:[160,250,420],hotel:[35,80,220],food:[12,28,70], transport:[6,12,22]},
+  {name:'삿포로',  flag:'🇯🇵',rank:'8위', country:'일본',       flight:[140,230,400],hotel:[60,120,290],food:[28,55,115],transport:[12,18,28]},
+  {name:'타이베이',flag:'🇹🇼',rank:'9위', country:'대만',       flight:[130,210,370],hotel:[45,100,260],food:[15,35,80], transport:[8,14,24]},
+  {name:'괌',      flag:'🇬🇺',rank:'10위',country:'괌(미국령)', flight:[220,340,520],hotel:[80,160,400],food:[30,60,130],transport:[10,20,40]},
+];
+
+// ── 성수기 판단 ────────────────────────
+const PEAK_MONTHS=[
+  {label:'여름방학 성수기',sm:7,sd:15,em:8,ed:31},
+  {label:'겨울방학·연말 성수기',sm:12,sd:20,em:1,ed:10},
+];
+const PEAK_DAYS=[
+  {label:'설날 연휴',days:[{m:1,d:27},{m:1,d:28},{m:1,d:29},{m:1,d:30},{m:1,d:31}]},
+  {label:'어린이날 연휴',days:[{m:5,d:3},{m:5,d:4},{m:5,d:5},{m:5,d:6}]},
+  {label:'추석 연휴',days:[{m:9,d:28},{m:9,d:29},{m:9,d:30},{m:10,d:1},{m:10,d:2},{m:10,d:3}]},
+];
+function isPeak(str){
+  if(!str) return {is:false,label:''};
+  const dt=new Date(str), m=dt.getMonth()+1, d=dt.getDate();
+  for(const r of PEAK_MONTHS){
+    if(r.sm<r.em){ if(m===r.sm&&d>=r.sd||m>r.sm&&m<r.em||m===r.em&&d<=r.ed) return {is:true,label:r.label}; }
+    else { if(m===r.sm&&d>=r.sd||m===r.em&&d<=r.ed||m>r.sm||m<r.em) return {is:true,label:r.label}; }
+  }
+  for(const p of PEAK_DAYS)
+    for(const x of p.days) if(x.m===m&&x.d===d) return {is:true,label:p.label};
+  return {is:false,label:''};
+}
+
+// ── 상태 ──────────────────────────────
+let selected=['도쿄','다낭'];
+let pax={adult:2,child:0,infant:0};
+let KRW=1530;
+
+function chgPax(t,d){
+  pax[t]=Math.max(0,pax[t]+d);
+  if(pax.adult<1) pax.adult=1;
+  document.getElementById(t+'-num').textContent=pax[t];
+  render();
+}
+
+// ── 환율 ──────────────────────────────
+async function fetchRate(){
+  // 1차: exchangerate-api (무료, 정확도 높음)
+  try{
+    const r=await fetch('https://open.er-api.com/v6/latest/USD');
+    const j=await r.json();
+    if(j.rates?.KRW){
+      KRW=Math.round(j.rates.KRW);
+      const updated=j.time_last_update_utc?j.time_last_update_utc.slice(0,16):'';
+      document.getElementById('rate-bar').innerHTML=
+        `💱 실시간 환율 <strong>1 USD = ₩${KRW.toLocaleString()}</strong> <span class="rate-live">실시간</span> · 업데이트: ${updated}`;
+      render();
+      return;
+    }
+  }catch{}
+  // 2차 fallback: Frankfurter
+  try{
+    const r=await fetch('https://api.frankfurter.app/latest?from=USD&to=KRW');
+    const j=await r.json();
+    if(j.rates?.KRW){
+      KRW=Math.round(j.rates.KRW);
+      document.getElementById('rate-bar').innerHTML=
+        `💱 실시간 환율 <strong>1 USD = ₩${KRW.toLocaleString()}</strong> <span class="rate-live">실시간</span> · 기준일: ${j.date}`;
+      render();
+      return;
+    }
+  }catch{}
+  // 3차 fallback: 기본값
+  document.getElementById('rate-bar').innerHTML=
+    `💱 환율 <strong>1 USD = ₩${KRW.toLocaleString()}</strong> <span class="rate-fallback">네트워크 오류 · 기준값 사용 중</span>`;
+}
+
+// ── 계산 ──────────────────────────────
+const w=usd=>'₩'+Math.round(usd*KRW).toLocaleString();
+const si=()=>parseInt(document.getElementById('style').value);
+const days=()=>parseInt(document.getElementById('days').value)||5;
+const pal=n=>PAL[CITIES.findIndex(c=>c.name===n)];
+
+function calc(c,s,d,peak){
+  const pm=peak?1.35:1;
+  const fl=c.flight[s]*pm*(pax.adult+pax.child*.75+pax.infant*.10);
+  const rm=Math.ceil(pax.adult/2);
+  const ho=c.hotel[s]*pm*d*rm;
+  const fo=c.food[s]*d*(pax.adult+pax.child*.6);
+  const tr=c.transport[s]*d*(pax.adult+pax.child);
+  return {fl,ho,fo,tr,total:fl+ho+fo+tr};
+}
+
+function render(){
+  const s=si(),d=days(),ds=document.getElementById('depart-date').value;
+  const peak=isPeak(ds);
+  const sel=CITIES.filter(c=>selected.includes(c.name));
+  const mEl=document.getElementById('metrics');
+  const rEl=document.getElementById('result');
+  const nEl=document.getElementById('peak-notice');
+
+  // 성수기 알림
+  if(!ds){ nEl.className='peak-notice'; }
+  else if(peak.is){
+    nEl.className='peak-notice peak';
+    nEl.innerHTML=`✈️ <strong>${peak.label}</strong> 기간이에요! 항공·숙박 약 35% 인상 반영됩니다.`;
+  } else {
+    nEl.className='peak-notice off';
+    nEl.innerHTML=`✅ <strong>비수기</strong>예요. 항공·숙박 정상 요금이 적용됩니다.`;
+  }
+
+  if(!sel.length){ mEl.innerHTML=''; rEl.innerHTML='<p class="empty">여행지를 하나 이상 선택해주세요 🗺️</p>'; return; }
+
+  const tots=sel.map(c=>({...c,...calc(c,s,d,peak.is),p:pal(c.name)}));
+  const maxT=Math.max(...tots.map(t=>t.total));
+  const minT=Math.min(...tots.map(t=>t.total));
+  const avgD=tots.reduce((a,b)=>a+(b.ho+b.fo+b.tr)/d,0)/tots.length;
+  const totPax=pax.adult+pax.child+(pax.infant||0);
+
+  // 총비용 카드
+  mEl.innerHTML=tots.map(c=>`
+    <div class="metric" style="background:${c.p.bg};border-left-color:${c.p.s}">
+      <div class="ml">${c.flag} ${c.name}${peak.is?` <span class="b-peak">성수기</span>`:''}</div>
+      <div class="mv" style="color:${c.p.t}">${w(c.total)}</div>
+      <div class="ms">총 ${totPax}인 · ${d}일</div>
+      <div class="mp" style="color:${c.p.t}">1인당 ${w(c.total/pax.adult)}</div>
+    </div>`).join('');
+
+  function badge(v){ return v<=avgD*.8?'<span class="badge b-green">저렴</span>':v>=avgD*1.2?'<span class="badge b-red">비쌈</span>':'<span class="badge b-amber">보통</span>'; }
+  const lgd=()=>`<div class="legend">${tots.map(c=>`<div class="lc"><div class="lc-dot" style="background:${c.p.s}"></div>${c.flag} ${c.name}</div>`).join('')}</div>`;
+  const bar=(c,pct,v,b='')=>`<div class="brow"><span class="bl">${c.flag} ${c.name}</span><div class="bt"><div class="bf" style="width:${pct}%;background:${c.p.s}"></div></div><span class="bv">${v}${b}</span></div>`;
+
+  const maxD=Math.max(...tots.map(t=>(t.ho+t.fo+t.tr)/d));
+  let h=`<div class="card"><h3>일일 경비 비교 (항공 제외 · ${totPax}인 기준)</h3>${lgd()}`;
+  tots.forEach(c=>{ const dly=(c.ho+c.fo+c.tr)/d; h+=bar(c,Math.round(dly/maxD*100),`${w(dly)}/일`,badge(dly)); });
+  h+=`</div>`;
+
+  h+=`<div class="card"><h3>항목별 상세 비교 (총 ${d}일)</h3>${lgd()}`;
+  [{k:'ho',l:'🛏 숙박'},{k:'fo',l:'🍜 식비'},{k:'tr',l:'🚌 교통'}].forEach(({k,l})=>{
+    const mx=Math.max(...tots.map(c=>c[k]));
+    h+=`<div class="cat-div">${l}</div>`;
+    tots.forEach(c=>h+=bar(c,Math.round(c[k]/mx*100),w(c[k])));
+  });
+  h+=`</div>`;
+
+  const mxF=Math.max(...tots.map(c=>c.fl));
+  h+=`<div class="card"><h3>✈️ 항공료 비교 (왕복 ${totPax}인${peak.is?' · 성수기 +35%':''})</h3>${lgd()}`;
+  tots.forEach(c=>h+=bar(c,Math.round(c.fl/mxF*100),w(c.fl)));
+  h+=`</div>`;
+
+  if(sel.length>=2){
+    const ch=tots.reduce((a,b)=>a.total<b.total?a:b);
+    h+=`<div class="tip tip-blue">💡 <strong>${ch.flag} ${ch.name}</strong>이 가장 저렴해요. 최대 <strong>${w(maxT-minT)}</strong> 절약 가능! (${totPax}인 기준)</div>`;
+  }
+  if(peak.is) h+=`<div class="tip tip-amber" style="margin-top:8px">⚠️ 성수기엔 항공권을 <strong>최소 2~3개월 전</strong>에 예약하세요. 일찍 예약할수록 저렴합니다!</div>`;
+
+  h+=`<div class="aff-box" style="margin-top:16px">
+    <span>✈️ ${tots.map(c=>c.flag+c.name).join(' · ')} 항공권 최저가 비교</span>
+    <button class="aff-btn" onclick="window.open('https://www.skyscanner.co.kr','_blank')">최저가 검색 →</button>
+  </div>
+  <div class="aff-box">
+    <span>🏨 이 예산대 숙소 찾기</span>
+    <button class="aff-btn" onclick="window.open('https://www.agoda.com/ko-kr','_blank')">숙소 보기 →</button>
+  </div>`;
+
+  rEl.innerHTML=h;
+}
+
+// ── 도시 버튼 ──────────────────────────
+const grid=document.getElementById('city-grid');
+CITIES.forEach((c,i)=>{
+  const p=PAL[i];
+  const btn=document.createElement('button');
+  btn.className='city-btn';
+  if(selected.includes(c.name)) btn.style.cssText=`border-color:${p.s};background:${p.bg};color:${p.t}`;
+  btn.innerHTML=`<span class="flag">${c.flag}</span><span class="cname">${c.name}</span><br><span class="rank">${c.rank} · ${c.country}</span>`;
+  btn.onclick=()=>{
+    if(selected.includes(c.name)){ if(selected.length>1) selected=selected.filter(x=>x!==c.name); }
+    else selected.push(c.name);
+    const on=selected.includes(c.name);
+    btn.style.cssText=on?`border-color:${p.s};background:${p.bg};color:${p.t}`:'';
+    render();
+  };
+  grid.appendChild(btn);
+});
+
+document.getElementById('depart-date').value=new Date().toISOString().split('T')[0];
+['days','style','depart-date'].forEach(id=>document.getElementById(id).addEventListener('change',render));
+document.getElementById('days').addEventListener('input',render);
+
+fetchRate();
+render();
+</script>
+</body>
+</html>
