@@ -216,6 +216,36 @@ body {
 .tip-blue { background: var(--c-info-bg); color: var(--c-info); }
 .tip-amber { background: #FFF8E1; color: #C07000; border: 1px solid #FFE082; }
 
+/* ── SHARE ── */
+.share-box {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-top: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.share-title { font-size: 12px; font-weight: 600; color: var(--c-sub); margin-bottom: 10px; }
+.share-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.share-btn {
+  font-size: 13px; font-weight: 600;
+  padding: 8px 16px; border-radius: 7px;
+  border: none; cursor: pointer;
+  transition: opacity .15s; font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
+}
+.share-btn:hover { opacity: .85; }
+.btn-kakao { background: #FEE500; color: #3C1E1E; }
+.btn-copy { background: var(--c-bg); color: var(--c-text); border: 1px solid var(--c-border); }
+.btn-save { background: #2F9E44; color: #fff; }
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #1A1D23; color: #fff; font-size: 13px;
+  padding: 10px 20px; border-radius: 99px;
+  opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999;
+}
+.toast.show { opacity: 1; }
+
 /* ── AFFILIATE ── */
 .aff-box {
   background: var(--c-card);
@@ -333,6 +363,9 @@ footer {
     환율: Frankfurter API (ECB 기준) · 성수기 기간: 여름/겨울방학·설·추석·황금연휴 기준
   </footer>
 </div>
+
+<div id="toast" class="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
 // ── 팔레트 ────────────────────────────
@@ -549,7 +582,28 @@ function render(){
     <div style="display:flex;flex-wrap:wrap;margin-top:8px">${hotelBtns}</div>
   </div>`;
 
+  // 공유 버튼
+  const cityNames = tots.map(c=>c.flag+' '+c.name).join(', ');
+  const cheapest = tots.reduce((a,b)=>a.total<b.total?a:b);
+  const shareText = `✈️ ${cityNames} ${d}일 여행 예산 비교!\n💰 최저 ${w(cheapest.total)} (${totPax}인 기준)\n🔗 한국인 여행 예산 계산기\nhttps://korea-travel-calc.netlify.app`;
+
+  h+=`<div class="share-box" id="share-result">
+    <div class="share-title">📤 결과 공유하기</div>
+    <div class="share-btns">
+      <button class="share-btn btn-kakao" onclick="shareKakao()">
+        💬 카카오톡 공유
+      </button>
+      <button class="share-btn btn-copy" onclick="copyLink()">
+        🔗 링크 복사
+      </button>
+      <button class="share-btn btn-save" onclick="saveImage()">
+        📸 이미지 저장
+      </button>
+    </div>
+  </div>`;
+
   rEl.innerHTML=h;
+  window._shareText = shareText;
 }
 
 // ── 도시 버튼 ──────────────────────────
@@ -573,6 +627,43 @@ CITIES.forEach((c,i)=>{
 document.getElementById('depart-date').value=new Date().toISOString().split('T')[0];
 ['days','style','depart-date'].forEach(id=>document.getElementById(id).addEventListener('change',render));
 document.getElementById('days').addEventListener('input',render);
+
+// ── 공유 기능 ──────────────────────────
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function shareKakao(){
+  const text = window._shareText || '한국인 여행 예산 계산기\nhttps://korea-travel-calc.netlify.app';
+  if(navigator.share){
+    navigator.share({ title:'한국인 여행 예산 계산기', text:text, url:'https://korea-travel-calc.netlify.app' })
+    .catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(text).then(()=>{
+      showToast('📋 카카오톡에 붙여넣기 하세요!');
+    });
+  }
+}
+
+function copyLink(){
+  navigator.clipboard.writeText('https://korea-travel-calc.netlify.app').then(()=>{
+    showToast('🔗 링크가 복사됐어요!');
+  });
+}
+
+function saveImage(){
+  const el = document.querySelector('.main');
+  showToast('📸 이미지 저장 중...');
+  html2canvas(el, { backgroundColor:'#F7F8FA', scale:2, useCORS:true }).then(canvas=>{
+    const a=document.createElement('a');
+    a.download='여행예산계산기.png';
+    a.href=canvas.toDataURL('image/png');
+    a.click();
+    showToast('✅ 이미지가 저장됐어요!');
+  });
+}
 
 fetchRate();
 render();
