@@ -388,6 +388,14 @@ const PAL=[
   {s:'#5C7CFA',bg:'#EDF2FF',t:'#3451D1'},
   {s:'#74B816',bg:'#F4FCE3',t:'#4A7A0A'},
   {s:'#F76707',bg:'#FFF4E6',t:'#C44E00'},
+  {s:'#0B7285',bg:'#E3FAFC',t:'#085769'},
+  {s:'#862E9C',bg:'#F8F0FC',t:'#5C1F6B'},
+  {s:'#D9480F',bg:'#FFF4E6',t:'#A33A0A'},
+  {s:'#087F5B',bg:'#E6FCF5',t:'#065C43'},
+  {s:'#364FC7',bg:'#EDF2FF',t:'#233296'},
+  {s:'#A61E4D',bg:'#FFF0F6',t:'#7A1438'},
+  {s:'#5F3DC4',bg:'#F3F0FF',t:'#3B27A1'},
+  {s:'#1864AB',bg:'#E7F5FF',t:'#0D4A80'},
 ];
 
 // ── 도시 데이터 ────────────────────────
@@ -402,6 +410,14 @@ const CITIES=[
   {name:'삿포로',  flag:'🇯🇵',rank:'8위', country:'일본',       flight:[140,230,400],hotel:[60,120,290],food:[28,55,115],transport:[12,18,28]},
   {name:'타이베이',flag:'🇹🇼',rank:'9위', country:'대만',       flight:[130,210,370],hotel:[45,100,260],food:[15,35,80], transport:[8,14,24]},
   {name:'괌',      flag:'🇬🇺',rank:'10위',country:'괌(미국령)', flight:[220,340,520],hotel:[80,160,400],food:[30,60,130],transport:[10,20,40]},
+  {name:'홍콩',    flag:'🇭🇰',rank:'11위',country:'홍콩',       flight:[150,240,400],hotel:[65,130,320],food:[25,55,120],transport:[8,14,25]},
+  {name:'세부',    flag:'🇵🇭',rank:'12위',country:'필리핀',     flight:[180,280,450],hotel:[30,75,200],food:[10,25,65], transport:[5,10,20]},
+  {name:'싱가포르',flag:'🇸🇬',rank:'13위',country:'싱가포르',   flight:[160,250,420],hotel:[80,160,380],food:[25,55,120],transport:[8,15,28]},
+  {name:'코타키나발루',flag:'🇲🇾',rank:'14위',country:'말레이시아',flight:[170,260,430],hotel:[35,80,220],food:[10,25,65],transport:[5,10,20]},
+  {name:'하노이',  flag:'🇻🇳',rank:'15위',country:'베트남',     flight:[140,220,380],hotel:[25,60,170],food:[8,20,55],  transport:[4,8,18]},
+  {name:'파리',    flag:'🇫🇷',rank:'16위',country:'프랑스',     flight:[500,800,1200],hotel:[90,180,450],food:[35,70,150],transport:[12,20,35]},
+  {name:'이스탄불',flag:'🇹🇷',rank:'17위',country:'튀르키예',   flight:[400,650,1000],hotel:[45,100,280],food:[15,35,90], transport:[6,12,25]},
+  {name:'시드니',  flag:'🇦🇺',rank:'18위',country:'호주',       flight:[450,700,1100],hotel:[85,170,420],food:[35,70,150],transport:[12,20,35]},
 ];
 
 // ── 성수기 판단 ────────────────────────
@@ -560,6 +576,14 @@ function render(){
     '삿포로':'https://www.trip.com/t/zShht85VEV2',
     '타이베이':'https://www.trip.com/t/kkEK9t5VEV2',
     '괌':'https://www.trip.com/t/uOx2417VEV2',
+    '홍콩':'https://www.trip.com/t/2qJapEsPFV2',
+    '세부':'https://www.trip.com/t/hxmesvsPFV2',
+    '싱가포르':'https://www.trip.com/t/LWuwKVtPFV2',
+    '코타키나발루':'https://www.trip.com/t/KqA1OCuPFV2',
+    '하노이':'https://www.trip.com/t/vdGvJquPFV2',
+    '파리':'https://www.trip.com/t/mxdpHOvPFV2',
+    '이스탄불':'https://www.trip.com/t/RQhXmxvPFV2',
+    '시드니':'https://www.trip.com/t/eU7WBOwPFV2',
   };
   const TRIP_FLIGHT={
     '도쿄':'https://www.trip.com/t/9VrEvJMVEV2',
@@ -572,10 +596,18 @@ function render(){
     '삿포로':'https://www.trip.com/t/Tc3cwpTVEV2',
     '타이베이':'https://www.trip.com/t/ytygxMVVEV2',
     '괌':'https://www.trip.com/t/BVTwT8WVEV2',
+    '홍콩':'https://www.trip.com/t/6S6pwWlPFV2',
+    '세부':'https://www.trip.com/t/JM2xAxmPFV2',
+    '싱가포르':'https://www.trip.com/t/5ypLSenPFV2',
+    '코타키나발루':'https://www.trip.com/t/JuhtDVoPFV2',
+    '하노이':'https://www.trip.com/t/URs8qBpPFV2',
+    '파리':'https://www.trip.com/t/VjMHdxpPFV2',
+    '이스탄불':'https://www.trip.com/t/UD1ykbqPFV2',
+    '시드니':'https://www.trip.com/t/s2haU5rPFV2',
   };
   // 도시별 최저 숙박가 (USD 기준 → 원화 변환)
-  const HOTEL_FROM={ '도쿄':89,'후쿠오카':65,'오사카':72,'나트랑':35,'발리':40,'다낭':28,'방콕':38,'삿포로':68,'타이베이':55,'괌':95 };
-  const FLIGHT_FROM={ '도쿄':189,'후쿠오카':129,'오사카':139,'나트랑':159,'발리':209,'다낭':149,'방콕':169,'삿포로':149,'타이베이':139,'괌':229 };
+  const HOTEL_FROM={ '도쿄':89,'후쿠오카':65,'오사카':72,'나트랑':35,'발리':40,'다낭':28,'방콕':38,'삿포로':68,'타이베이':55,'괌':95,'홍콩':85,'세부':38,'싱가포르':95,'코타키나발루':42,'하노이':28,'파리':110,'이스탄불':55,'시드니':105 };
+  const FLIGHT_FROM={ '도쿄':189,'후쿠오카':129,'오사카':139,'나트랑':159,'발리':209,'다낭':149,'방콕':169,'삿포로':149,'타이베이':139,'괌':229,'홍콩':159,'세부':189,'싱가포르':169,'코타키나발루':179,'하노이':149,'파리':520,'이스탄불':420,'시드니':469 };
 
   const isPeakNow = peak.is;
   const urgencyMsg = isPeakNow
