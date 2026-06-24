@@ -266,6 +266,13 @@ body {
   transition: opacity .15s; font-family: inherit;
 }
 .aff-btn:hover { opacity: .85; }
+.aff-animated {
+  animation: popIn 0.4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes popIn {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
 
 /* ── FOOTER ── */
 footer {
@@ -565,21 +572,46 @@ function render(){
     '타이베이':'https://www.trip.com/t/ytygxMVVEV2',
     '괌':'https://www.trip.com/t/BVTwT8WVEV2',
   };
+  // 도시별 최저 숙박가 (USD 기준 → 원화 변환)
+  const HOTEL_FROM={ '도쿄':89,'후쿠오카':65,'오사카':72,'나트랑':35,'발리':40,'다낭':28,'방콕':38,'삿포로':68,'타이베이':55,'괌':95 };
+  const FLIGHT_FROM={ '도쿄':189,'후쿠오카':129,'오사카':139,'나트랑':159,'발리':209,'다낭':149,'방콕':169,'삿포로':149,'타이베이':139,'괌':229 };
+
+  const isPeakNow = peak.is;
+  const urgencyMsg = isPeakNow
+    ? '⏰ 성수기! 지금 예약 안 하면 더 오릅니다'
+    : '⏰ 지금 예약하면 성수기 전 가격!';
+
   const hotelBtns=tots.map(c=>{
     const link=TRIP_HOTEL[c.name]||'https://www.trip.com';
-    return `<button class="aff-btn" style="background:${c.p.s};margin:3px;font-size:12px;padding:6px 12px" onclick="window.open('${link}','_blank')">${c.flag} ${c.name} 숙소 →</button>`;
+    const from=HOTEL_FROM[c.name]?`₩${Math.round(HOTEL_FROM[c.name]*KRW/1000)}K~`:'';
+    return `<button class="aff-btn aff-animated" style="background:${c.p.s};margin:4px;font-size:12px;padding:8px 14px;border-radius:8px;display:flex;flex-direction:column;align-items:flex-start;gap:2px" onclick="window.open('${link}','_blank')">
+      <span style="font-size:13px">${c.flag} ${c.name} 숙소 →</span>
+      ${from?`<span style="font-size:10px;opacity:0.85">${from}부터</span>`:''}
+    </button>`;
   }).join('');
+
   const flightBtns=tots.map(c=>{
     const link=TRIP_FLIGHT[c.name]||'https://www.trip.com';
-    return `<button class="aff-btn" style="background:${c.p.s};margin:3px;font-size:12px;padding:6px 12px" onclick="window.open('${link}','_blank')">${c.flag} ${c.name} 항공권 →</button>`;
+    const from=FLIGHT_FROM[c.name]?`₩${Math.round(FLIGHT_FROM[c.name]*KRW/1000)}K~`:'';
+    return `<button class="aff-btn aff-animated" style="background:${c.p.s};margin:4px;font-size:12px;padding:8px 14px;border-radius:8px;display:flex;flex-direction:column;align-items:flex-start;gap:2px" onclick="window.open('${link}','_blank')">
+      <span style="font-size:13px">${c.flag} ${c.name} 항공권 →</span>
+      ${from?`<span style="font-size:10px;opacity:0.85">${from}부터</span>`:''}
+    </button>`;
   }).join('');
+
   h+=`<div class="aff-box" style="margin-top:16px;flex-direction:column;align-items:flex-start">
-    <span>✈️ 서울 출발 항공권 최저가 (트립닷컴)</span>
-    <div style="display:flex;flex-wrap:wrap;margin-top:8px">${flightBtns}</div>
+    <div style="display:flex;justify-content:space-between;width:100%;align-items:center;flex-wrap:wrap;gap:6px">
+      <span>✈️ 서울 출발 항공권 최저가 (트립닷컴)</span>
+      <span style="font-size:11px;color:#C07000;font-weight:600">${urgencyMsg}</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;margin-top:10px">${flightBtns}</div>
   </div>
   <div class="aff-box" style="margin-top:8px;flex-direction:column;align-items:flex-start">
-    <span>🏨 선택한 여행지 숙소 최저가 (트립닷컴)</span>
-    <div style="display:flex;flex-wrap:wrap;margin-top:8px">${hotelBtns}</div>
+    <div style="display:flex;justify-content:space-between;width:100%;align-items:center;flex-wrap:wrap;gap:6px">
+      <span>🏨 선택한 여행지 숙소 최저가 (트립닷컴)</span>
+      <span style="font-size:11px;color:#C07000;font-weight:600">${urgencyMsg}</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;margin-top:10px">${hotelBtns}</div>
   </div>`;
 
   // 공유 버튼
