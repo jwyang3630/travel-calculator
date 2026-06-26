@@ -758,6 +758,39 @@ function render(){
     </div>
   </div>`;
 
+  h+=`<div class="card" style="margin-top:10px">
+    <h3>🎒 여행 준비물 한번에 해결</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:10px">
+      <a href="https://link.coupang.com/a/eTe9IWdEWa" target="_blank" rel="noopener"
+         style="display:block;padding:10px 12px;background:#f8f9fa;border:1px solid #e8ecf0;border-radius:8px;font-size:13px;color:#1a1d23;text-decoration:none;text-align:center">
+        🧳 캐리어
+      </a>
+      <a href="https://link.coupang.com/a/eTfmamYXw4" target="_blank" rel="noopener"
+         style="display:block;padding:10px 12px;background:#f8f9fa;border:1px solid #e8ecf0;border-radius:8px;font-size:13px;color:#1a1d23;text-decoration:none;text-align:center">
+        🔋 보조배터리
+      </a>
+      <a href="https://link.coupang.com/a/eTfHuaMXDM" target="_blank" rel="noopener"
+         style="display:block;padding:10px 12px;background:#f8f9fa;border:1px solid #e8ecf0;border-radius:8px;font-size:13px;color:#1a1d23;text-decoration:none;text-align:center">
+        👜 여행용 파우치
+      </a>
+      <a href="https://link.coupang.com/a/eTfPbdbbvE" target="_blank" rel="noopener"
+         style="display:block;padding:10px 12px;background:#f8f9fa;border:1px solid #e8ecf0;border-radius:8px;font-size:13px;color:#1a1d23;text-decoration:none;text-align:center">
+        🔌 해외 어댑터
+      </a>
+      <a href="https://link.coupang.com/a/eTfLGaX45A" target="_blank" rel="noopener"
+         style="display:block;padding:10px 12px;background:#f8f9fa;border:1px solid #e8ecf0;border-radius:8px;font-size:13px;color:#1a1d23;text-decoration:none;text-align:center">
+        😴 목베개
+      </a>
+      <a href="https://link.coupang.com/a/eTfAI52Bie" target="_blank" rel="noopener"
+         style="display:block;padding:10px 12px;background:#f8f9fa;border:1px solid #e8ecf0;border-radius:8px;font-size:13px;color:#1a1d23;text-decoration:none;text-align:center">
+        🧴 선스틱
+      </a>
+    </div>
+    <div style="font-size:11px;color:#6b7280;margin-top:10px">
+      ※ 이 링크는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+    </div>
+  </div>`;
+
   // 공유 버튼
   const cityNames = tots.map(c=>c.flag+' '+c.name).join(', ');
   const cheapest = tots.reduce((a,b)=>a.total<b.total?a:b);
