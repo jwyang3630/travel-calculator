@@ -419,7 +419,40 @@ footer {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
-// ── 팔레트 ────────────────────────────
+// ── 팔레트 (선택 수에 따라 최적 색상 세트 동적 배정) ──────────────────────────
+const COLOR_SETS={
+  2:[
+    {s:'#E03131',bg:'#FFF0F0',t:'#A61212'},
+    {s:'#1971C2',bg:'#E7F5FF',t:'#1050A0'},
+  ],
+  3:[
+    {s:'#E03131',bg:'#FFF0F0',t:'#A61212'},
+    {s:'#1971C2',bg:'#E7F5FF',t:'#1050A0'},
+    {s:'#2F9E44',bg:'#EBFBEE',t:'#1A6B2A'},
+  ],
+  4:[
+    {s:'#E03131',bg:'#FFF0F0',t:'#A61212'},
+    {s:'#1971C2',bg:'#E7F5FF',t:'#1050A0'},
+    {s:'#2F9E44',bg:'#EBFBEE',t:'#1A6B2A'},
+    {s:'#E67700',bg:'#FFF4E6',t:'#B35900'},
+  ],
+  5:[
+    {s:'#E03131',bg:'#FFF0F0',t:'#A61212'},
+    {s:'#1971C2',bg:'#E7F5FF',t:'#1050A0'},
+    {s:'#2F9E44',bg:'#EBFBEE',t:'#1A6B2A'},
+    {s:'#E67700',bg:'#FFF4E6',t:'#B35900'},
+    {s:'#9C36B5',bg:'#F8F0FC',t:'#6A1580'},
+  ],
+  6:[
+    {s:'#E03131',bg:'#FFF0F0',t:'#A61212'},
+    {s:'#1971C2',bg:'#E7F5FF',t:'#1050A0'},
+    {s:'#2F9E44',bg:'#EBFBEE',t:'#1A6B2A'},
+    {s:'#E67700',bg:'#FFF4E6',t:'#B35900'},
+    {s:'#9C36B5',bg:'#F8F0FC',t:'#6A1580'},
+    {s:'#0C8599',bg:'#E3FAFC',t:'#0A6070'},
+  ],
+};
+// 7개 이상 또는 도시 버튼용 고정 팔레트
 const PAL=[
   {s:'#E03131',bg:'#FFF0F0',t:'#A61212'},
   {s:'#1971C2',bg:'#E7F5FF',t:'#1050A0'},
@@ -428,18 +461,26 @@ const PAL=[
   {s:'#9C36B5',bg:'#F8F0FC',t:'#6A1580'},
   {s:'#0C8599',bg:'#E3FAFC',t:'#0A6070'},
   {s:'#C2255C',bg:'#FFF0F6',t:'#8A1740'},
-  {s:'#5C7CFA',bg:'#EDF2FF',t:'#3451D1'},
   {s:'#74B816',bg:'#F4FCE3',t:'#4A7A0A'},
-  {s:'#F76707',bg:'#FFF4E6',t:'#C44E00'},
-  {s:'#0B7285',bg:'#E3FAFC',t:'#085769'},
-  {s:'#862E9C',bg:'#F8F0FC',t:'#5C1F6B'},
-  {s:'#D9480F',bg:'#FFF4E6',t:'#A33A0A'},
-  {s:'#087F5B',bg:'#E6FCF5',t:'#065C43'},
   {s:'#364FC7',bg:'#EDF2FF',t:'#233296'},
+  {s:'#087F5B',bg:'#E6FCF5',t:'#065C43'},
+  {s:'#F76707',bg:'#FFF4E6',t:'#C44E00'},
+  {s:'#862E9C',bg:'#F8F0FC',t:'#5C1F6B'},
   {s:'#A61E4D',bg:'#FFF0F6',t:'#7A1438'},
-  {s:'#5F3DC4',bg:'#F3F0FF',t:'#3B27A1'},
   {s:'#1864AB',bg:'#E7F5FF',t:'#0D4A80'},
+  {s:'#5F3DC4',bg:'#F3F0FF',t:'#3B27A1'},
+  {s:'#D9480F',bg:'#FFF4E6',t:'#A33A0A'},
+  {s:'#5C7CFA',bg:'#EDF2FF',t:'#3451D1'},
+  {s:'#0B7285',bg:'#E3FAFC',t:'#085769'},
 ];
+// 선택된 도시들에 동적으로 색상 배정
+function getActivePalette(selectedNames){
+  const n=selectedNames.length;
+  const set=COLOR_SETS[Math.min(n,6)]||PAL;
+  const map={};
+  selectedNames.forEach((name,i)=>{ map[name]=set[i]||PAL[i]; });
+  return map;
+}
 
 // ── 도시 데이터 ────────────────────────
 const CITIES=[
@@ -608,7 +649,8 @@ function render(){
   const HOTEL_FROM={ '도쿄':89,'후쿠오카':65,'오사카':72,'나트랑':35,'발리':40,'다낭':28,'방콕':38,'삿포로':68,'타이베이':55,'괌':95,'홍콩':85,'세부':38,'싱가포르':95,'코타키나발루':42,'하노이':28,'파리':110,'이스탄불':55,'시드니':105 };
   const FLIGHT_FROM={ '도쿄':189,'후쿠오카':129,'오사카':139,'나트랑':159,'발리':209,'다낭':149,'방콕':169,'삿포로':149,'타이베이':139,'괌':229,'홍콩':159,'세부':189,'싱가포르':169,'코타키나발루':179,'하노이':149,'파리':520,'이스탄불':420,'시드니':469 };
 
-  const tots=sel.map(c=>({...c,...calc(c,s,d,peak.is),p:pal(c.name)}));
+  const activepal=getActivePalette(sel.map(c=>c.name));
+  const tots=sel.map(c=>({...c,...calc(c,s,d,peak.is),p:activepal[c.name]}));
   const maxT=Math.max(...tots.map(t=>t.total));
   const minT=Math.min(...tots.map(t=>t.total));
   const avgD=tots.reduce((a,b)=>a+(b.ho+b.fo+b.tr)/d,0)/tots.length;
