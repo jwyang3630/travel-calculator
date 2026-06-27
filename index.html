@@ -7,7 +7,7 @@
 <meta name="description" content="일본, 동남아, 괌 등 한국인 인기 여행지 18곳의 여행경비·항공료·숙박·식비를 실시간 환율로 비교하세요. 해외여행 경비·예산 성수기/비수기, 인원수별 총비용 자동 계산.">
 <meta name="keywords" content="여행경비계산기, 여행예산계산기, 해외여행경비, 해외여행예산, 일본여행비용, 일본여행경비, 다낭여행경비, 발리여행경비, 발리여행비용, 방콕여행경비, 괌여행비용, 성수기항공료, 여행예산계획, 여행경비계획">
 <meta property="og:title" content="한국인 여행 경비·예산 계산기">
-<meta property="og:description" content="인기 여행지 18곳 실시간 환율 · 여행경비·예산 자동 계산 · 성수기 자동 반영 · 인원별 총비용">
+<meta property="og:description" content="인기 여행지 18곳 실시간 환율 · 여행경비·예산 자동 계산 · 성수기 참고값 제공 · 인원별 총비용">
 <meta property="og:type" content="website">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-GX25S16CCF"></script>
@@ -340,7 +340,7 @@ footer {
 <div class="hero">
   <span class="hero-emoji">✈️</span>
   <h1>한국인 <span>여행 경비·예산</span> 계산기</h1>
-  <p>3초만에 18개국 여행 경비·예산 끝! · 실시간 환율 · 성수기 자동 반영</p>
+  <p>3초만에 18개국 여행 경비·예산 끝! · 실시간 환율 · 성수기 참고값 제공</p>
 </div>
 
 <div class="rate-bar" id="rate-bar">💱 환율 불러오는 중...</div>
@@ -598,10 +598,10 @@ function render(){
   if(!ds){ nEl.className='peak-notice'; }
   else if(peak.is){
     nEl.className='peak-notice peak';
-    nEl.innerHTML=`✈️ <strong>${peak.label}</strong> 기간이에요! 항공·숙박 약 35% 인상 반영됩니다.`;
+    nEl.innerHTML=`✈️ <strong>${peak.label}</strong> 기간이에요! 성수기 기준 평균값 반영 · 실제 가격은 트립닷컴에서 확인하세요.`;
   } else {
     nEl.className='peak-notice off';
-    nEl.innerHTML=`✅ <strong>비수기</strong>예요. 항공·숙박 정상 요금이 적용됩니다.`;
+    nEl.innerHTML=`✅ <strong>비수기</strong> 기준 평균 참고값이에요. 실제 가격은 예약 시기·항공사마다 달라요.`;
   }
 
   if(!sel.length){ mEl.innerHTML=''; rEl.innerHTML='<p class="empty">여행지를 하나 이상 선택해주세요 🗺️</p>'; return; }
@@ -705,11 +705,11 @@ function render(){
     const ch=tots.reduce((a,b)=>a.total<b.total?a:b);
     h+=`<div class="tip tip-blue">💡 <strong>${ch.flag} ${ch.name}</strong>이 가장 저렴해요. 최대 <strong>${w(maxT-minT)}</strong> 절약 가능! (${totPax}인 기준)</div>`;
   }
-  if(peak.is) h+=`<div class="tip tip-amber" style="margin-top:8px">⚠️ 성수기엔 항공권을 <strong>최소 2~3개월 전</strong>에 예약하세요. 일찍 예약할수록 저렴합니다!</div>`;
+  if(peak.is) h+=`<div class="tip tip-amber" style="margin-top:8px">⚠️ 성수기엔 항공·숙박 가격이 크게 오를 수 있어요. 실제 가격은 트립닷컴에서 날짜별로 확인하세요.</div>`;
 
   const isPeakNow = peak.is;
   const urgencyMsg = isPeakNow
-    ? '⏰ 성수기! 지금 예약 안 하면 더 오릅니다'
+    ? '⏰ 성수기! 실제 가격은 트립닷컴에서 확인하세요'
     : '⏰ 지금 예약하면 성수기 전 가격!';
 
   const hotelBtns=tots.map(c=>{
@@ -731,8 +731,8 @@ function render(){
   }).join('');
 
   const peakBanner = isPeakNow
-    ? `<div class="aff-urgency-bar aff-urgency-peak">🔥 성수기! 지금 예약 안 하면 가격 더 오릅니다. 평균 <strong>2~3개월 전</strong> 예약 필수!</div>`
-    : `<div class="aff-urgency-bar aff-urgency-off">✅ 비수기 지금이 최저가! 미리 예약할수록 유리합니다.</div>`;
+    ? `<div class="aff-urgency-bar aff-urgency-peak">🔥 성수기! 항공·숙박 가격이 오를 수 있어요. 실제 가격은 트립닷컴에서 확인하세요.</div>`
+    : `<div class="aff-urgency-bar aff-urgency-off">✅ 비수기 평균 참고값이에요. 실제 최저가는 트립닷컴에서 날짜별로 확인하세요.</div>`;
 
   h+=`<div class="aff-section">
     ${peakBanner}
@@ -740,8 +740,8 @@ function render(){
       <div class="aff-block-header">
         <span class="aff-block-icon">✈️</span>
         <div>
-          <div class="aff-block-title">서울 출발 항공권 최저가 비교</div>
-          <div class="aff-block-sub">트립닷컴에서 실시간 최저가 확인</div>
+          <div class="aff-block-title">서울 출발 항공권 가격 비교</div>
+          <div class="aff-block-sub">트립닷컴에서 날짜별 실제 가격 확인</div>
         </div>
       </div>
       <div class="aff-btn-grid">${flightBtns}</div>
@@ -750,7 +750,7 @@ function render(){
       <div class="aff-block-header">
         <span class="aff-block-icon">🏨</span>
         <div>
-          <div class="aff-block-title">선택한 여행지 숙소 최저가 비교</div>
+          <div class="aff-block-title">선택한 여행지 숙소 가격 비교</div>
           <div class="aff-block-sub">트립닷컴에서 날짜별 가격 확인</div>
         </div>
       </div>
