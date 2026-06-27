@@ -3,17 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>한국인 여행 경비·예산 계산기 | 실시간 환율 · 성수기 반영</title>
-<meta name="description" content="일본, 동남아, 괌 등 한국인 인기 여행지 18곳의 여행경비·항공료·숙박·식비를 실시간 환율로 비교하세요. 해외여행 경비·예산 성수기/비수기, 인원수별 총비용 자동 계산.">
-<meta name="keywords" content="여행경비계산기, 여행예산계산기, 해외여행경비, 해외여행예산, 일본여행비용, 일본여행경비, 다낭여행경비, 발리여행경비, 발리여행비용, 방콕여행경비, 괌여행비용, 성수기항공료, 여행예산계획, 여행경비계획">
-<meta property="og:title" content="한국인 여행 경비·예산 계산기">
-<meta property="og:description" content="인기 여행지 18곳 실시간 환율 · 여행경비·예산 자동 계산 · 성수기 참고값 제공 · 인원별 총비용">
-<meta property="og:image" content="https://korea-travel-calc.netlify.app/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:url" content="https://korea-travel-calc.netlify.app">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://korea-travel-calc.netlify.app/og-image.png">
+<title>한국인 여행 예산 계산기 | 실시간 환율 · 성수기 반영</title>
+<meta name="description" content="일본, 동남아, 괌 등 한국인 인기 여행지 18곳의 항공료·숙박·식비를 실시간 환율로 비교하세요. 성수기/비수기, 인원수별 총비용 자동 계산.">
+<meta name="keywords" content="여행경비계산기, 해외여행예산, 일본여행비용, 다낭여행경비, 발리여행비용, 방콕여행경비, 괌여행비용, 성수기항공료, 여행예산계획">
+<meta property="og:title" content="한국인 여행 예산 계산기">
+<meta property="og:description" content="인기 여행지 18곳 실시간 환율 · 성수기 자동 반영 · 인원별 총비용">
+<meta property="og:type" content="website">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-GX25S16CCF"></script>
 <script>
@@ -323,6 +318,46 @@ body {
 }
 .aff-btn-grid .aff-btn:hover { opacity: .9; transform: translateY(-2px); box-shadow: 0 5px 14px rgba(0,0,0,.2); }
 
+/* ── FAQ ── */
+.faq-section {
+  margin-top: 12px;
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.faq-title {
+  font-size: 13px; font-weight: 700;
+  padding: 14px 18px 10px;
+  color: var(--c-text);
+  border-bottom: 1px solid var(--c-border);
+}
+.faq-item {
+  border-bottom: 1px solid var(--c-border);
+}
+.faq-item:last-child { border-bottom: none; }
+.faq-q {
+  width: 100%; text-align: left;
+  padding: 13px 18px;
+  font-size: 13px; font-weight: 600;
+  color: var(--c-text);
+  background: none; border: none;
+  cursor: pointer; font-family: inherit;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 8px;
+}
+.faq-q:hover { background: var(--c-bg); }
+.faq-arrow { font-size: 11px; color: var(--c-sub); transition: transform .2s; flex-shrink: 0; }
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  display: none;
+  padding: 0 18px 14px;
+  font-size: 13px; color: var(--c-sub);
+  line-height: 1.7;
+}
+.faq-item.open .faq-a { display: block; }
+
 /* ── FOOTER ── */
 footer {
   text-align: center; font-size: 11px; color: var(--c-sub);
@@ -344,8 +379,8 @@ footer {
 
 <div class="hero">
   <span class="hero-emoji">✈️</span>
-  <h1>한국인 <span>여행 경비·예산</span> 계산기</h1>
-  <p>3초만에 18개국 여행 경비·예산 끝! · 실시간 환율 · 성수기 참고값 제공</p>
+  <h1>한국인 <span>여행 예산</span> 계산기</h1>
+  <p>3초만에 18개국 여행 예산 끝! · 실시간 환율 · 성수기 자동 반영</p>
 </div>
 
 <div class="rate-bar" id="rate-bar">💱 환율 불러오는 중...</div>
@@ -412,6 +447,39 @@ footer {
   <!-- 결과 -->
   <div class="metric-grid" id="metrics"></div>
   <div id="result"></div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <div class="faq-title">❓ 자주 묻는 질문</div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">해외여행 예산·경비는 얼마나 잡아야 하나요? <span class="faq-arrow">▼</span></button>
+      <div class="faq-a">여행지와 스타일에 따라 크게 달라요. 동남아(다낭·방콕) 5일 2인 기준 가성비 80~100만원, 중간 150~200만원, 럭셔리 300만원 이상이에요. 일본(도쿄·오사카)은 동남아보다 1.5~2배 정도 더 나와요. 위 계산기에서 여행지·기간·인원을 입력하면 3초만에 확인할 수 있어요.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">성수기에는 여행 경비가 얼마나 올라요? <span class="faq-arrow">▼</span></button>
+      <div class="faq-a">성수기(여름방학·설·추석·황금연휴)에는 항공권이 평균 30~80%, 숙박이 20~40% 오를 수 있어요. 특히 인기 노선(도쿄·오사카)은 성수기 직전 가격이 급등하므로 2~3개월 전 예약을 권장해요. 이 계산기는 성수기 기준 참고값을 제공하며, 실제 가격은 트립닷컴에서 날짜별로 확인하세요.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">2인 여행 예산은 1인의 2배인가요? <span class="faq-arrow">▼</span></button>
+      <div class="faq-a">항공권은 정확히 2배지만, 숙박은 2인이 한 방을 쓰면 1인당 절반이에요. 식비·교통은 거의 1인당 비용 × 인원수로 계산돼요. 그래서 2인 여행이 1인 여행보다 1인당 비용이 더 저렴한 편이에요. 이 계산기는 성인 2명 기준 룸 공유를 자동 반영해요.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">100만원으로 해외여행이 가능한가요? <span class="faq-arrow">▼</span></button>
+      <div class="faq-a">1인 기준으로는 충분히 가능해요! 다낭·하노이·방콕 같은 동남아는 비수기 가성비 스타일로 5일 기준 1인 40~60만원대도 가능해요. 2인 기준 100만원이라면 동남아 3~4일 가성비 여행이 현실적이에요. 위 계산기에서 가성비 스타일로 설정하고 확인해보세요.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">여행 경비 계산할 때 환율은 어떻게 반영되나요? <span class="faq-arrow">▼</span></button>
+      <div class="faq-a">이 계산기는 실시간 환율 API를 통해 USD 기준 비용을 현재 원화로 자동 변환해요. 환율은 페이지 상단에 표시되며, 네트워크 오류 시 최근 기준값을 사용해요. 환율 변동에 따라 실제 여행 경비가 달라질 수 있으니 예약 시점에 다시 확인하는 것을 권장해요.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">도쿄와 오사카 중 어디가 더 저렴해요? <span class="faq-arrow">▼</span></button>
+      <div class="faq-a">오사카가 도쿄보다 평균 10~15% 저렴해요. 항공권은 비슷하지만 숙박과 식비에서 차이가 나요. 위 계산기에서 도쿄·오사카를 동시에 선택하면 항목별로 바로 비교할 수 있어요.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">아동·유아 동반 여행 경비는 어떻게 계산하나요? <span class="faq-arrow">▼</span></button>
+      <div class="faq-a">이 계산기는 아동·유아를 따로 입력할 수 있어요. 아동은 항공 75%, 식비 60%를 적용하고, 유아는 항공 10%, 숙박·식비는 무료로 계산해요. 숙박은 성인 기준 룸 공유를 가정해요. 실제 항공사·호텔 정책에 따라 다를 수 있으니 예약 전 확인하세요.</div>
+    </div>
+  </div>
 
   <footer>
     ※ 본 계산기의 비용은 평균 참고값이며 실제 가격과 다를 수 있습니다.<br>
@@ -603,10 +671,10 @@ function render(){
   if(!ds){ nEl.className='peak-notice'; }
   else if(peak.is){
     nEl.className='peak-notice peak';
-    nEl.innerHTML=`✈️ <strong>${peak.label}</strong> 기간이에요! 성수기 기준 평균값 반영 · 실제 가격은 트립닷컴에서 확인하세요.`;
+    nEl.innerHTML=`✈️ <strong>${peak.label}</strong> 기간이에요! 항공·숙박 약 35% 인상 반영됩니다.`;
   } else {
     nEl.className='peak-notice off';
-    nEl.innerHTML=`✅ <strong>비수기</strong> 기준 평균 참고값이에요. 실제 가격은 예약 시기·항공사마다 달라요.`;
+    nEl.innerHTML=`✅ <strong>비수기</strong>예요. 항공·숙박 정상 요금이 적용됩니다.`;
   }
 
   if(!sel.length){ mEl.innerHTML=''; rEl.innerHTML='<p class="empty">여행지를 하나 이상 선택해주세요 🗺️</p>'; return; }
@@ -710,11 +778,11 @@ function render(){
     const ch=tots.reduce((a,b)=>a.total<b.total?a:b);
     h+=`<div class="tip tip-blue">💡 <strong>${ch.flag} ${ch.name}</strong>이 가장 저렴해요. 최대 <strong>${w(maxT-minT)}</strong> 절약 가능! (${totPax}인 기준)</div>`;
   }
-  if(peak.is) h+=`<div class="tip tip-amber" style="margin-top:8px">⚠️ 성수기엔 항공·숙박 가격이 크게 오를 수 있어요. 실제 가격은 트립닷컴에서 날짜별로 확인하세요.</div>`;
+  if(peak.is) h+=`<div class="tip tip-amber" style="margin-top:8px">⚠️ 성수기엔 항공권을 <strong>최소 2~3개월 전</strong>에 예약하세요. 일찍 예약할수록 저렴합니다!</div>`;
 
   const isPeakNow = peak.is;
   const urgencyMsg = isPeakNow
-    ? '⏰ 성수기! 실제 가격은 트립닷컴에서 확인하세요'
+    ? '⏰ 성수기! 지금 예약 안 하면 더 오릅니다'
     : '⏰ 지금 예약하면 성수기 전 가격!';
 
   const hotelBtns=tots.map(c=>{
@@ -736,8 +804,8 @@ function render(){
   }).join('');
 
   const peakBanner = isPeakNow
-    ? `<div class="aff-urgency-bar aff-urgency-peak">🔥 성수기! 항공·숙박 가격이 오를 수 있어요. 실제 가격은 트립닷컴에서 확인하세요.</div>`
-    : `<div class="aff-urgency-bar aff-urgency-off">✅ 비수기 평균 참고값이에요. 실제 최저가는 트립닷컴에서 날짜별로 확인하세요.</div>`;
+    ? `<div class="aff-urgency-bar aff-urgency-peak">🔥 성수기! 지금 예약 안 하면 가격 더 오릅니다. 평균 <strong>2~3개월 전</strong> 예약 필수!</div>`
+    : `<div class="aff-urgency-bar aff-urgency-off">✅ 비수기 지금이 최저가! 미리 예약할수록 유리합니다.</div>`;
 
   h+=`<div class="aff-section">
     ${peakBanner}
@@ -745,8 +813,8 @@ function render(){
       <div class="aff-block-header">
         <span class="aff-block-icon">✈️</span>
         <div>
-          <div class="aff-block-title">서울 출발 항공권 가격 비교</div>
-          <div class="aff-block-sub">트립닷컴에서 날짜별 실제 가격 확인</div>
+          <div class="aff-block-title">서울 출발 항공권 최저가 비교</div>
+          <div class="aff-block-sub">트립닷컴에서 실시간 최저가 확인</div>
         </div>
       </div>
       <div class="aff-btn-grid">${flightBtns}</div>
@@ -755,7 +823,7 @@ function render(){
       <div class="aff-block-header">
         <span class="aff-block-icon">🏨</span>
         <div>
-          <div class="aff-block-title">선택한 여행지 숙소 가격 비교</div>
+          <div class="aff-block-title">선택한 여행지 숙소 최저가 비교</div>
           <div class="aff-block-sub">트립닷컴에서 날짜별 가격 확인</div>
         </div>
       </div>
@@ -877,6 +945,12 @@ function saveImage(){
     a.click();
     showToast('✅ 이미지가 저장됐어요!');
   });
+}
+
+// ── FAQ 토글 ──────────────────────────
+function toggleFaq(btn){
+  const item=btn.parentElement;
+  item.classList.toggle('open');
 }
 
 fetchRate();
