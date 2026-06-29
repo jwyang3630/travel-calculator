@@ -852,24 +852,24 @@ function render(){
   if(!sel.length){ mEl.innerHTML=''; rEl.innerHTML='<p class="empty">여행지를 하나 이상 선택해주세요 🗺️</p>'; return; }
 
   const TRIP_HOTEL={
-    '도쿄':'https://www.trip.com/t/dbCg9RmUEV2',
-    '후쿠오카':'https://www.trip.com/t/cuOpRcqUEV2',
-    '오사카':'https://www.trip.com/t/fwcWTVsUEV2',
-    '나트랑':'https://www.trip.com/t/5jKU10yUEV2',
-    '발리':'https://www.trip.com/t/w41f3IzUEV2',
-    '다낭':'https://www.trip.com/t/XQjQOj3VEV2',
-    '방콕':'https://www.trip.com/t/fjPraQ4VEV2',
-    '삿포로':'https://www.trip.com/t/zShht85VEV2',
-    '타이베이':'https://www.trip.com/t/kkEK9t5VEV2',
-    '괌':'https://www.trip.com/t/uOx2417VEV2',
-    '홍콩':'https://www.trip.com/t/2qJapEsPFV2',
-    '세부':'https://www.trip.com/t/hxmesvsPFV2',
-    '싱가포르':'https://www.trip.com/t/LWuwKVtPFV2',
-    '코타키나발루':'https://www.trip.com/t/KqA1OCuPFV2',
-    '하노이':'https://www.trip.com/t/vdGvJquPFV2',
-    '파리':'https://www.trip.com/t/mxdpHOvPFV2',
-    '이스탄불':'https://www.trip.com/t/RQhXmxvPFV2',
-    '시드니':'https://www.trip.com/t/eU7WBOwPFV2',
+    '도쿄':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=5085',
+    '후쿠오카':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=16527',
+    '오사카':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=9590',
+    '나트랑':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=2679',
+    '발리':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=17193',
+    '다낭':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=16440',
+    '방콕':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=9395',
+    '삿포로':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=3435',
+    '타이베이':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=4951',
+    '괌':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=6126',
+    '홍콩':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=16808',
+    '세부':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=4001',
+    '싱가포르':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=4064',
+    '코타키나발루':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=5070',
+    '하노이':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=2758',
+    '파리':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=15470',
+    '이스탄불':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=14932',
+    '시드니':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=14370',
   };
   const TRIP_FLIGHT={
     '도쿄':'https://www.trip.com/t/9VrEvJMVEV2',
@@ -890,6 +890,26 @@ function render(){
     '파리':'https://www.trip.com/t/VjMHdxpPFV2',
     '이스탄불':'https://www.trip.com/t/UD1ykbqPFV2',
     '시드니':'https://www.trip.com/t/s2haU5rPFV2',
+  };
+  const AGODA_HOTEL={
+    '도쿄':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=5085',
+    '후쿠오카':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=16527',
+    '오사카':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=9590',
+    '나트랑':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=2679',
+    '발리':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=17193',
+    '다낭':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=16440',
+    '방콕':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=9395',
+    '삿포로':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=3435',
+    '타이베이':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=4951',
+    '괌':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=6126',
+    '홍콩':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=16808',
+    '세부':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=4001',
+    '싱가포르':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=4064',
+    '코타키나발루':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=5070',
+    '하노이':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=2758',
+    '파리':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=15470',
+    '이스탄불':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=14932',
+    '시드니':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=14370',
   };
   const HOTEL_FROM={ '도쿄':89,'후쿠오카':65,'오사카':72,'나트랑':35,'발리':40,'다낭':28,'방콕':38,'삿포로':68,'타이베이':55,'괌':95,'홍콩':85,'세부':38,'싱가포르':95,'코타키나발루':42,'하노이':28,'파리':110,'이스탄불':55,'시드니':105 };
   const FLIGHT_FROM={ '도쿄':189,'후쿠오카':129,'오사카':139,'나트랑':159,'발리':209,'다낭':149,'방콕':169,'삿포로':149,'타이베이':139,'괌':229,'홍콩':159,'세부':189,'싱가포르':169,'코타키나발루':179,'하노이':149,'파리':520,'이스탄불':420,'시드니':469 };
@@ -918,7 +938,10 @@ function render(){
           ✈️ 항공권${flFrom?` <span class="metric-btn-from">${flFrom}</span>`:''}
         </a>
         <a href="${hoLink}" target="_blank" class="metric-action-btn metric-action-btn--hotel" style="border-color:${c.p.s};color:${c.p.t}" onclick="event.stopPropagation()">
-          🏨 숙소${hoFrom?` <span class="metric-btn-from" style="color:${c.p.t}">${hoFrom}</span>`:''}
+          🏨 트립닷컴${hoFrom?` <span class="metric-btn-from" style="color:${c.p.t}">${hoFrom}</span>`:''}
+        </a>
+        <a href="${AGODA_HOTEL[c.name]||'https://www.agoda.com'}" target="_blank" class="metric-action-btn metric-action-btn--hotel" style="border-color:${c.p.s};color:#B8860B" onclick="event.stopPropagation()">
+          🏨 아고다
         </a>
       </div>
     </div>`;
@@ -959,10 +982,15 @@ function render(){
 
   const hotelBtns=tots.map(c=>{
     const link=TRIP_HOTEL[c.name]||'https://www.trip.com';
+    const agodaLink=AGODA_HOTEL[c.name]||'https://www.agoda.com';
     const from=HOTEL_FROM[c.name]?`₩${Math.round(HOTEL_FROM[c.name]*KRW/1000)}K~`:'';
     return `<button class="aff-btn aff-animated" style="background:${c.p.s};margin:4px;font-size:12px;padding:8px 14px;border-radius:8px;display:flex;flex-direction:column;align-items:flex-start;gap:2px" onclick="window.open('${link}','_blank')">
-      <span style="font-size:13px;color:#fff;font-weight:600">${c.flag} ${c.name} 숙소 →</span>
+      <span style="font-size:13px;color:#fff;font-weight:600">${c.flag} ${c.name} 트립닷컴 →</span>
       ${from?`<span style="font-size:11px;color:rgba(255,255,255,0.9);font-weight:500">${from}부터</span>`:''}
+    </button>
+    <button class="aff-btn aff-animated" style="background:${c.p.s};margin:4px;font-size:12px;padding:8px 14px;border-radius:8px;display:flex;flex-direction:column;align-items:flex-start;gap:2px" onclick="window.open('${agodaLink}','_blank')">
+      <span style="font-size:13px;color:#FFD43B;font-weight:600">${c.flag} ${c.name} 아고다 →</span>
+      ${from?`<span style="font-size:11px;color:rgba(255,212,59,0.9);font-weight:500">${from}부터</span>`:''}
     </button>`;
   }).join('');
 
@@ -976,8 +1004,8 @@ function render(){
   }).join('');
 
   const peakBanner = isPeakNow
-    ? `<div class="aff-urgency-bar aff-urgency-peak">🔥 성수기! 항공·숙박 가격이 오를 수 있어요. 실제 가격은 트립닷컴에서 확인하세요.</div>`
-    : `<div class="aff-urgency-bar aff-urgency-off">✅ 비수기 평균 참고값이에요. 실제 최저가는 트립닷컴에서 날짜별로 확인하세요.</div>`;
+    ? `<div class="aff-urgency-bar aff-urgency-peak">🔥 성수기! 항공·숙박 가격이 오를 수 있어요. 실제 가격은 트립닷컴·아고다에서 확인하세요.</div>`
+    : `<div class="aff-urgency-bar aff-urgency-off">✅ 비수기 평균 참고값이에요. 실제 최저가는 트립닷컴·아고다에서 날짜별로 확인하세요.</div>`;
 
   h+=`<div class="aff-section">
     ${peakBanner}
@@ -996,7 +1024,7 @@ function render(){
         <span class="aff-block-icon">🏨</span>
         <div>
           <div class="aff-block-title">선택한 여행지 숙소 가격 비교</div>
-          <div class="aff-block-sub">트립닷컴에서 날짜별 가격 확인</div>
+          <div class="aff-block-sub">트립닷컴 · 아고다에서 날짜별 가격 확인</div>
         </div>
       </div>
       <div class="aff-btn-grid">${hotelBtns}</div>
