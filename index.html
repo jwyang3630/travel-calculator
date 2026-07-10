@@ -9,12 +9,12 @@
 <meta property="og:title" content="한국인 여행 예산 계산기">
 <meta property="og:description" content="인기 여행지 18곳 실시간 환율 · 여행경비·예산 자동 계산 · 성수기 참고값 제공 · 인원별 총비용">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://korea-travel-calc.netlify.app/og-image.png">
+<meta property="og:image" content="https://travel-calculator.pages.dev/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:url" content="https://korea-travel-calc.netlify.app">
+<meta property="og:url" content="https://travel-calculator.pages.dev">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://korea-travel-calc.netlify.app/og-image.png">
+<meta name="twitter:image" content="https://travel-calculator.pages.dev/og-image.png">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-GX25S16CCF"></script>
 <script>
@@ -934,14 +934,14 @@ function render(){
       <div class="ms">총 ${totPax}인 · ${d}일</div>
       <div class="mp" style="color:${c.p.t}">1인당 ${w(c.total/pax.adult)}</div>
       <div class="metric-action-row">
-        <a href="${flLink}" target="_blank" class="metric-action-btn" style="background:${c.p.s}" onclick="event.stopPropagation()">
-          ✈️ 항공권${flFrom?` <span class="metric-btn-from">${flFrom}</span>`:''}
+        <a href="${hoLink}" target="_blank" class="metric-action-btn" style="background:${c.p.s}" onclick="event.stopPropagation()">
+          🏨 숙소${hoFrom?` <span class="metric-btn-from">${hoFrom}</span>`:''}
         </a>
-        <a href="${hoLink}" target="_blank" class="metric-action-btn metric-action-btn--hotel" style="border-color:${c.p.s};color:${c.p.t}" onclick="event.stopPropagation()">
-          🏨 트립닷컴${hoFrom?` <span class="metric-btn-from" style="color:${c.p.t}">${hoFrom}</span>`:''}
-        </a>
-        <a href="${AGODA_HOTEL[c.name]||'https://www.agoda.com'}" target="_blank" class="metric-action-btn metric-action-btn--hotel" style="border-color:${c.p.s};color:#B8860B" onclick="event.stopPropagation()">
+        <a href="${AGODA_HOTEL[c.name]||'https://www.agoda.com'}" target="_blank" class="metric-action-btn" style="background:#B8860B;color:#fff" onclick="event.stopPropagation()">
           🏨 아고다
+        </a>
+        <a href="${flLink}" target="_blank" class="metric-action-btn metric-action-btn--hotel" style="border-color:${c.p.s};color:${c.p.t}" onclick="event.stopPropagation()">
+          ✈️ 항공권${flFrom?` <span class="metric-btn-from" style="color:${c.p.t}">${flFrom}</span>`:''}
         </a>
       </div>
     </div>`;
@@ -1011,16 +1011,6 @@ function render(){
     ${peakBanner}
     <div class="aff-block">
       <div class="aff-block-header">
-        <span class="aff-block-icon">✈️</span>
-        <div>
-          <div class="aff-block-title">서울 출발 항공권 가격 비교</div>
-          <div class="aff-block-sub">트립닷컴에서 날짜별 실제 가격 확인</div>
-        </div>
-      </div>
-      <div class="aff-btn-grid">${flightBtns}</div>
-    </div>
-    <div class="aff-block" style="margin-top:10px">
-      <div class="aff-block-header">
         <span class="aff-block-icon">🏨</span>
         <div>
           <div class="aff-block-title">선택한 여행지 숙소 가격 비교</div>
@@ -1028,6 +1018,16 @@ function render(){
         </div>
       </div>
       <div class="aff-btn-grid">${hotelBtns}</div>
+    </div>
+    <div class="aff-block" style="margin-top:10px">
+      <div class="aff-block-header">
+        <span class="aff-block-icon">✈️</span>
+        <div>
+          <div class="aff-block-title">서울 출발 항공권 가격 비교</div>
+          <div class="aff-block-sub">트립닷컴에서 날짜별 실제 가격 확인</div>
+        </div>
+      </div>
+      <div class="aff-btn-grid">${flightBtns}</div>
     </div>
   </div>`;
 
@@ -1067,7 +1067,7 @@ function render(){
   // 공유 버튼
   const cityNames = tots.map(c=>c.flag+' '+c.name).join(', ');
   const cheapest = tots.reduce((a,b)=>a.total<b.total?a:b);
-  const shareText = `✈️ ${cityNames} ${d}일 여행 예산 비교!\n💰 최저 ${w(cheapest.total)} (${totPax}인 기준)\n🔗 한국인 여행 예산 계산기\nhttps://korea-travel-calc.netlify.app`;
+  const shareText = `✈️ ${cityNames} ${d}일 여행 예산 비교!\n💰 최저 ${w(cheapest.total)} (${totPax}인 기준)\n🔗 한국인 여행 예산 계산기\nhttps://travel-calculator.pages.dev`;
 
   h+=`<div class="share-box" id="share-result">
     <div class="share-title">📤 결과 공유하기</div>
@@ -1118,9 +1118,9 @@ function showToast(msg){
 }
 
 function shareKakao(){
-  const text = window._shareText || '한국인 여행 예산 계산기\nhttps://korea-travel-calc.netlify.app';
+  const text = window._shareText || '한국인 여행 예산 계산기\nhttps://travel-calculator.pages.dev';
   if(navigator.share){
-    navigator.share({ title:'한국인 여행 예산 계산기', text:text, url:'https://korea-travel-calc.netlify.app' })
+    navigator.share({ title:'한국인 여행 예산 계산기', text:text, url:'https://travel-calculator.pages.dev' })
     .catch(()=>{});
   } else {
     navigator.clipboard.writeText(text).then(()=>{
@@ -1130,7 +1130,7 @@ function shareKakao(){
 }
 
 function copyLink(){
-  navigator.clipboard.writeText('https://korea-travel-calc.netlify.app').then(()=>{
+  navigator.clipboard.writeText('https://travel-calculator.pages.dev').then(()=>{
     showToast('🔗 링크가 복사됐어요!');
   });
 }
