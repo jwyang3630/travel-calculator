@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://travel-calculator.pages.dev/sitemap.xml
