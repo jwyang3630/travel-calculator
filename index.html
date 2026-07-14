@@ -462,7 +462,18 @@ footer {
   <!-- 날짜 + 기간 -->
   <div class="controls">
     <div class="fg"><label>출발 예정일</label><input type="date" id="depart-date"></div>
-    <div class="fg"><label>여행 기간 (일)</label><input type="number" id="days" value="5" min="1" max="30"></div>
+    <div class="fg"><label>여행 기간</label>
+      <select id="days">
+        <option value="2">1박2일</option>
+        <option value="3">2박3일</option>
+        <option value="4" selected>3박4일</option>
+        <option value="5">4박5일</option>
+        <option value="6">5박6일</option>
+        <option value="7">6박7일</option>
+        <option value="8">7박8일</option>
+        <option value="10">9박10일</option>
+      </select>
+    </div>
   </div>
 
   <!-- 스타일 -->
@@ -729,24 +740,24 @@ function getActivePalette(selectedNames){
 
 // ── 도시 데이터 ────────────────────────
 const CITIES=[
-  {name:'도쿄',    flag:'🇯🇵',rank:'1위', country:'일본',       flight:[180,280,450],hotel:[70,140,350],food:[30,60,120],transport:[15,20,30]},
-  {name:'후쿠오카',flag:'🇯🇵',rank:'2위', country:'일본',       flight:[120,200,350],hotel:[55,110,280],food:[25,50,100],transport:[10,15,25]},
-  {name:'오사카',  flag:'🇯🇵',rank:'3위', country:'일본',       flight:[130,210,360],hotel:[60,120,300],food:[25,55,110],transport:[12,18,28]},
-  {name:'나트랑',  flag:'🇻🇳',rank:'4위', country:'베트남',     flight:[150,230,400],hotel:[30,70,200],food:[10,25,60], transport:[5,10,20]},
+  {name:'도쿄',    flag:'🇯🇵',rank:'1위', country:'일본',       flight:[180,280,460],hotel:[75,190,360],food:[30,60,120],transport:[15,20,30]},
+  {name:'후쿠오카',flag:'🇯🇵',rank:'2위', country:'일본',       flight:[120,230,350],hotel:[60,140,290],food:[25,50,100],transport:[10,15,25]},
+  {name:'오사카',  flag:'🇯🇵',rank:'3위', country:'일본',       flight:[130,240,360],hotel:[65,150,310],food:[25,55,110],transport:[12,18,28]},
+  {name:'나트랑',  flag:'🇻🇳',rank:'4위', country:'베트남',     flight:[150,260,400],hotel:[30,70,200],food:[10,25,60], transport:[5,10,20]},
   {name:'발리',    flag:'🇮🇩',rank:'5위', country:'인도네시아', flight:[200,320,500],hotel:[40,90,250],food:[15,35,90], transport:[8,15,30]},
-  {name:'다낭',    flag:'🇻🇳',rank:'6위', country:'베트남',     flight:[140,220,380],hotel:[25,65,180],food:[10,22,55], transport:[5,10,18]},
-  {name:'방콕',    flag:'🇹🇭',rank:'7위', country:'태국',       flight:[160,250,420],hotel:[35,80,220],food:[12,28,70], transport:[6,12,22]},
-  {name:'삿포로',  flag:'🇯🇵',rank:'8위', country:'일본',       flight:[140,230,400],hotel:[60,120,290],food:[28,55,115],transport:[12,18,28]},
-  {name:'타이베이',flag:'🇹🇼',rank:'9위', country:'대만',       flight:[130,210,370],hotel:[45,100,260],food:[15,35,80], transport:[8,14,24]},
-  {name:'괌',      flag:'🇬🇺',rank:'10위',country:'괌(미국령)', flight:[220,340,520],hotel:[80,160,400],food:[30,60,130],transport:[10,20,40]},
-  {name:'홍콩',    flag:'🇭🇰',rank:'11위',country:'홍콩',       flight:[150,240,400],hotel:[65,130,320],food:[25,55,120],transport:[8,14,25]},
-  {name:'세부',    flag:'🇵🇭',rank:'12위',country:'필리핀',     flight:[180,280,450],hotel:[30,75,200],food:[10,25,65], transport:[5,10,20]},
-  {name:'싱가포르',flag:'🇸🇬',rank:'13위',country:'싱가포르',   flight:[160,250,420],hotel:[80,160,380],food:[25,55,120],transport:[8,15,28]},
-  {name:'코타키나발루',flag:'🇲🇾',rank:'14위',country:'말레이시아',flight:[170,260,430],hotel:[35,80,220],food:[10,25,65],transport:[5,10,20]},
-  {name:'하노이',  flag:'🇻🇳',rank:'15위',country:'베트남',     flight:[140,220,380],hotel:[25,60,170],food:[8,20,55],  transport:[4,8,18]},
-  {name:'파리',    flag:'🇫🇷',rank:'16위',country:'프랑스',     flight:[500,800,1200],hotel:[90,180,450],food:[35,70,150],transport:[12,20,35]},
-  {name:'이스탄불',flag:'🇹🇷',rank:'17위',country:'튀르키예',   flight:[400,650,1000],hotel:[45,100,280],food:[15,35,90], transport:[6,12,25]},
-  {name:'시드니',  flag:'🇦🇺',rank:'18위',country:'호주',       flight:[450,700,1100],hotel:[85,170,420],food:[35,70,150],transport:[12,20,35]},
+  {name:'다낭',    flag:'🇻🇳',rank:'6위', country:'베트남',     flight:[140,260,380],hotel:[25,65,180],food:[10,22,55], transport:[5,10,18]},
+  {name:'방콕',    flag:'🇹🇭',rank:'7위', country:'태국',       flight:[160,300,420],hotel:[35,80,220],food:[12,28,70], transport:[6,12,22]},
+  {name:'삿포로',  flag:'🇯🇵',rank:'8위', country:'일본',       flight:[140,260,400],hotel:[65,150,300],food:[28,55,115],transport:[12,18,28]},
+  {name:'타이베이',flag:'🇹🇼',rank:'9위', country:'대만',       flight:[130,230,370],hotel:[45,100,260],food:[15,35,80], transport:[8,14,24]},
+  {name:'괌',      flag:'🇬🇺',rank:'10위',country:'괌(미국령)', flight:[150,230,400],hotel:[80,160,400],food:[30,60,130],transport:[10,20,40]},
+  {name:'홍콩',    flag:'🇭🇰',rank:'11위',country:'홍콩',       flight:[150,260,400],hotel:[65,130,320],food:[25,55,120],transport:[8,14,25]},
+  {name:'세부',    flag:'🇵🇭',rank:'12위',country:'필리핀',     flight:[140,220,400],hotel:[30,75,200],food:[10,25,65], transport:[5,10,20]},
+  {name:'싱가포르',flag:'🇸🇬',rank:'13위',country:'싱가포르',   flight:[160,270,420],hotel:[80,160,380],food:[25,55,120],transport:[8,15,28]},
+  {name:'코타키나발루',flag:'🇲🇾',rank:'14위',country:'말레이시아',flight:[170,280,430],hotel:[35,80,220],food:[10,25,65],transport:[5,10,20]},
+  {name:'하노이',  flag:'🇻🇳',rank:'15위',country:'베트남',     flight:[220,300,450],hotel:[25,60,170],food:[8,20,55],  transport:[4,8,18]},
+  {name:'파리',    flag:'🇫🇷',rank:'16위',country:'프랑스',     flight:[430,600,1000],hotel:[90,180,450],food:[35,70,150],transport:[12,20,35]},
+  {name:'이스탄불',flag:'🇹🇷',rank:'17위',country:'튀르키예',   flight:[400,700,1000],hotel:[45,100,280],food:[15,35,90], transport:[6,12,25]},
+  {name:'시드니',  flag:'🇦🇺',rank:'18위',country:'호주',       flight:[450,750,1100],hotel:[85,170,420],food:[35,70,150],transport:[12,20,35]},
 ];
 
 // ── 성수기 판단 ────────────────────────
@@ -825,7 +836,8 @@ function calc(c,s,d,peak){
   const pm=peak?1.35:1;
   const fl=c.flight[s]*pm*(pax.adult+pax.child*.75+pax.infant*.10);
   const rm=Math.ceil(pax.adult/2);
-  const ho=c.hotel[s]*pm*d*rm;
+  const nights=Math.max(d-1,1);
+  const ho=c.hotel[s]*pm*nights*rm;
   const fo=c.food[s]*d*(pax.adult+pax.child*.6);
   const tr=c.transport[s]*d*(pax.adult+pax.child);
   return {fl,ho,fo,tr,total:fl+ho+fo+tr};

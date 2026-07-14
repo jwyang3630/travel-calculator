@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>예산으로 가는 여행지 찾기 | 성수기·비수기 동시 비교 계산기</title>
+<meta name="description" content="내 예산을 입력하면 지금 갈 수 있는 여행지와 성수기를 피하면 갈 수 있는 여행지를 한번에 보여드려요. 18개 인기 여행지 실시간 환율 · 성수기/비수기 가격 비교.">
+<meta name="keywords" content="여행지추천, 예산여행지, 저예산해외여행, 성수기비수기여행, 여행경비계산기, 해외여행예산, 다낭여행, 방콕여행, 발리여행, 여행지추천계산기">
+<meta property="og:title" content="예산으로 가는 여행지 찾기">
+<meta property="og:description" content="내 예산으로 지금 갈 수 있는 곳 vs 성수기만 피하면 갈 수 있는 곳, 한번에 비교!">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://travel-calculator.pages.dev/og-image.png">
+<meta property="og:url" content="https://travel-calculator.pages.dev/budget-finder.html">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GX25S16CCF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-GX25S16CCF');
+</script>
+<meta name="naver-site-verification" content="fff975c600c56c4cb18991067f03bcaf6d51b8e5" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --c-bg: #F7F8FA;
+  --c-card: #FFFFFF;
+  --c-border: #E8ECF0;
+  --c-text: #1A1D23;
+  --c-sub: #6B7280;
+  --c-info: #1971C2;
+  --c-info-bg: #E7F5FF;
+  --c-green: #2F9E44;
+  --c-green-bg: #EBFBEE;
+  --c-amber: #C07000;
+  --c-amber-bg: #FFF8E1;
+  --c-red: #E03131;
+  --c-red-bg: #FFF0F0;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  background: var(--c-bg);
+  color: var(--c-text);
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #0F1923 0%, #1B2F45 60%, #0F3460 100%);
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(25,113,194,0.25) 0%, transparent 60%);
+}
+.hero-emoji { font-size: 40px; display: block; margin-bottom: 12px; position: relative; }
+.hero h1 {
+  font-size: clamp(22px, 5vw, 32px);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.25;
+  margin-bottom: 8px;
+  position: relative;
+}
+.hero h1 span { color: #74C0FC; }
+.hero p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  position: relative;
+}
+
+.rate-bar {
+  background: var(--c-card);
+  border-bottom: 1px solid var(--c-border);
+  padding: 10px 24px;
+  font-size: 12px;
+  color: var(--c-sub);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.rate-bar strong { color: var(--c-text); }
+.rate-live { background: #EBFBEE; color: #2F9E44; font-size: 10px; padding: 2px 7px; border-radius: 99px; font-weight: 600; }
+.rate-fallback { background: #FFF3CD; color: #856404; font-size: 10px; padding: 2px 7px; border-radius: 99px; }
+
+.main { max-width: 720px; margin: 0 auto; padding: 24px 16px 60px; }
+.slabel { font-size: 11px; font-weight: 600; color: var(--c-sub); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 10px; }
+
+/* ── BUDGET INPUT ── */
+.budget-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 20px 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.budget-label { font-size: 13px; font-weight: 600; color: var(--c-sub); margin-bottom: 10px; }
+.budget-input-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.budget-input-row input {
+  flex: 1;
+  font-size: 22px; font-weight: 700;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--c-border);
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: inherit;
+  text-align: right;
+}
+.budget-input-row input:focus { outline: none; border-color: var(--c-info); }
+.budget-unit { font-size: 15px; font-weight: 600; color: var(--c-sub); }
+.chip-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  padding: 7px 12px;
+  border-radius: 99px;
+  border: 1.5px solid var(--c-border);
+  background: var(--c-bg);
+  font-size: 12px; font-weight: 500;
+  color: var(--c-text);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+}
+.chip:hover { border-color: var(--c-info); color: var(--c-info); }
+.chip.active { background: var(--c-info); border-color: var(--c-info); color: #fff; }
+
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.fg { display: flex; flex-direction: column; gap: 6px; }
+.fg label { font-size: 12px; color: var(--c-sub); font-weight: 500; }
+.fg input, .fg select {
+  font-size: 14px; padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--c-border);
+  background: var(--c-card);
+  color: var(--c-text);
+  font-family: inherit;
+}
+.fg input:focus, .fg select:focus { outline: none; border-color: var(--c-info); }
+
+/* ── RESULT GROUPS ── */
+.group-header {
+  display: flex; align-items: center; gap: 8px;
+  margin: 24px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--c-border);
+}
+.group-header .gtitle { font-size: 15px; font-weight: 700; }
+.group-header .gcount { font-size: 12px; color: var(--c-sub); background: var(--c-bg); padding: 2px 9px; border-radius: 99px; }
+.group-always .gtitle { color: var(--c-green); }
+.group-timing .gtitle { color: var(--c-amber); }
+.group-short .gtitle { color: var(--c-red); }
+.group-desc { font-size: 12px; color: var(--c-sub); margin-bottom: 12px; margin-top: -6px; }
+
+.city-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.city-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.city-name { font-size: 15px; font-weight: 700; }
+.city-country { font-size: 11px; color: var(--c-sub); margin-top: 2px; }
+.price-row { display: flex; gap: 16px; margin-bottom: 10px; }
+.price-block { flex: 1; }
+.price-block .pl { font-size: 11px; color: var(--c-sub); margin-bottom: 2px; }
+.price-block .pv { font-size: 15px; font-weight: 700; }
+.price-off .pv { color: var(--c-green); }
+.price-peak .pv { color: var(--c-red); }
+.peak-season-label { font-size: 11px; color: var(--c-sub); background: var(--c-bg); padding: 4px 8px; border-radius: 6px; margin-bottom: 10px; display: inline-block; }
+.short-diff { font-size: 12px; color: var(--c-red); margin-bottom: 10px; }
+.city-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.city-actions a {
+  flex: 1; min-width: 90px;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 11px; font-weight: 700;
+  text-decoration: none;
+  color: #fff;
+  transition: opacity .15s;
+}
+.city-actions a:hover { opacity: .85; }
+.btn-trip { background: #1971C2; }
+.btn-agoda { background: #B8860B; }
+.btn-flight { background: #2F9E44; }
+
+.empty-msg { font-size: 13px; color: var(--c-sub); text-align: center; padding: 20px 0; }
+
+footer {
+  text-align: center; font-size: 11px; color: var(--c-sub);
+  padding: 24px 16px; border-top: 1px solid var(--c-border);
+  margin-top: 24px;
+}
+footer a { color: var(--c-info); }
+
+@media (max-width: 480px) {
+  .controls { grid-template-columns: 1fr; }
+  .hero { padding: 36px 16px 32px; }
+  .price-row { gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="hero-emoji">🎯</span>
+  <h1>예산으로 <span>가는 여행지</span> 찾기</h1>
+  <p>예산만 입력하면 지금 갈 수 있는 곳 · 성수기만 피하면 갈 수 있는 곳을 한번에!</p>
+</div>
+
+<div class="rate-bar" id="rate-bar">💱 환율 불러오는 중...</div>
+
+<div class="main">
+
+  <div class="budget-card">
+    <div class="budget-label">💰 내 여행 예산 (총액, 원)</div>
+    <div class="budget-input-row">
+      <input type="number" id="budget" value="500000" step="10000">
+      <span class="budget-unit">원</span>
+    </div>
+    <div class="chip-row" id="chip-row"></div>
+    <div style="font-size:11px;color:var(--c-sub);margin-top:10px">💡 기본값은 특가·땡처리 기준이에요. 여유있게 예약하고 싶다면 아래 "여행 스타일"을 중간으로 바꿔보세요.</div>
+  </div>
+
+  <div class="controls">
+    <div class="fg"><label>여행 기간</label>
+      <select id="days">
+        <option value="2">1박2일</option>
+        <option value="3">2박3일</option>
+        <option value="4" selected>3박4일</option>
+        <option value="5">4박5일</option>
+        <option value="6">5박6일</option>
+        <option value="7">6박7일</option>
+        <option value="8">7박8일</option>
+        <option value="10">9박10일</option>
+      </select>
+    </div>
+    <div class="fg"><label>인원 (성인)</label><input type="number" id="pax" value="1" min="1" max="10"></div>
+  </div>
+  <div class="controls" style="margin-bottom:8px">
+    <div class="fg"><label>여행 스타일</label>
+      <select id="style">
+        <option value="0" selected>💰 가성비 (특가·땡처리 기준, 게스트하우스)</option>
+        <option value="1">🏨 중간 (일반 검색가 기준, 중급호텔)</option>
+        <option value="2">✨ 럭셔리 (5성호텔·파인다이닝)</option>
+      </select>
+    </div>
+    <div class="fg"></div>
+  </div>
+
+  <div id="result"></div>
+
+  <footer>
+    ※ 본 계산기의 비용은 평균 참고값이며 실제 가격과 다를 수 있습니다.<br>
+    성수기 배율은 항공사·여행사 공개 데이터 기반 추정치이며, 실제 가격은 예약 시기에 따라 달라집니다.<br>
+    환율: 실시간 환율 API 기준 · <a href="https://travel-calculator.pages.dev">전체 여행 예산 계산기로 돌아가기</a>
+  </footer>
+</div>
+
+<script>
+// ── 도시 데이터 (기존 계산기와 동일) ────────────────────────
+const CITIES=[
+  {name:'도쿄',    flag:'🇯🇵',country:'일본',       flight:[180,280,460],hotel:[75,190,360],food:[30,60,120],transport:[15,20,30]},
+  {name:'후쿠오카',flag:'🇯🇵',country:'일본',       flight:[120,230,350],hotel:[60,140,290],food:[25,50,100],transport:[10,15,25]},
+  {name:'오사카',  flag:'🇯🇵',country:'일본',       flight:[130,240,360],hotel:[65,150,310],food:[25,55,110],transport:[12,18,28]},
+  {name:'나트랑',  flag:'🇻🇳',country:'베트남',     flight:[150,260,400],hotel:[30,70,200],food:[10,25,60], transport:[5,10,20]},
+  {name:'발리',    flag:'🇮🇩',country:'인도네시아', flight:[200,320,500],hotel:[40,90,250],food:[15,35,90], transport:[8,15,30]},
+  {name:'다낭',    flag:'🇻🇳',country:'베트남',     flight:[140,260,380],hotel:[25,65,180],food:[10,22,55], transport:[5,10,18]},
+  {name:'방콕',    flag:'🇹🇭',country:'태국',       flight:[160,300,420],hotel:[35,80,220],food:[12,28,70], transport:[6,12,22]},
+  {name:'삿포로',  flag:'🇯🇵',country:'일본',       flight:[140,260,400],hotel:[65,150,300],food:[28,55,115],transport:[12,18,28]},
+  {name:'타이베이',flag:'🇹🇼',country:'대만',       flight:[130,230,370],hotel:[45,100,260],food:[15,35,80], transport:[8,14,24]},
+  {name:'괌',      flag:'🇬🇺',country:'괌(미국령)', flight:[150,230,400],hotel:[80,160,400],food:[30,60,130],transport:[10,20,40]},
+  {name:'홍콩',    flag:'🇭🇰',country:'홍콩',       flight:[150,260,400],hotel:[65,130,320],food:[25,55,120],transport:[8,14,25]},
+  {name:'세부',    flag:'🇵🇭',country:'필리핀',     flight:[140,220,400],hotel:[30,75,200],food:[10,25,65], transport:[5,10,20]},
+  {name:'싱가포르',flag:'🇸🇬',country:'싱가포르',   flight:[160,270,420],hotel:[80,160,380],food:[25,55,120],transport:[8,15,28]},
+  {name:'코타키나발루',flag:'🇲🇾',country:'말레이시아',flight:[170,280,430],hotel:[35,80,220],food:[10,25,65],transport:[5,10,20]},
+  {name:'하노이',  flag:'🇻🇳',country:'베트남',     flight:[220,300,450],hotel:[25,60,170],food:[8,20,55],  transport:[4,8,18]},
+  {name:'파리',    flag:'🇫🇷',country:'프랑스',     flight:[430,600,1000],hotel:[90,180,450],food:[35,70,150],transport:[12,20,35]},
+  {name:'이스탄불',flag:'🇹🇷',country:'튀르키예',   flight:[400,700,1000],hotel:[45,100,280],food:[15,35,90], transport:[6,12,25]},
+  {name:'시드니',  flag:'🇦🇺',country:'호주',       flight:[450,750,1100],hotel:[85,170,420],food:[35,70,150],transport:[12,20,35]},
+];
+
+// ── 도시별 성수기 배율 & 시기 (실측+지역군 준용 리서치 기반) ──────────
+const PEAK_MULT={
+  '도쿄':{flight:1.45,hotel:1.30},   '오사카':{flight:1.40,hotel:1.30}, '후쿠오카':{flight:1.50,hotel:1.25},
+  '삿포로':{flight:1.90,hotel:1.30},
+  '나트랑':{flight:1.50,hotel:1.25}, '다낭':{flight:1.50,hotel:1.25},   '하노이':{flight:1.50,hotel:1.25},
+  '방콕':{flight:1.60,hotel:1.25},
+  '발리':{flight:1.80,hotel:1.30},
+  '세부':{flight:1.50,hotel:1.20},
+  '코타키나발루':{flight:1.35,hotel:1.20},
+  '타이베이':{flight:1.35,hotel:1.20}, '홍콩':{flight:1.30,hotel:1.20}, '싱가포르':{flight:1.30,hotel:1.20}, '괌':{flight:1.35,hotel:1.20},
+  '파리':{flight:1.50,hotel:1.30}, '이스탄불':{flight:1.45,hotel:1.25},
+  '시드니':{flight:1.40,hotel:1.30},
+};
+const PEAK_LABEL={
+  '도쿄':'벚꽃(3말~4초)·GW·여름(7~8월)·연말', '오사카':'벚꽃(3말~4초)·GW·여름(7~8월)·연말', '후쿠오카':'벚꽃(3말~4초)·GW·여름(7~8월)·연말',
+  '삿포로':'겨울 눈축제(12~2월)·여름 라벤더(7~8월)',
+  '나트랑':'건기(12~3월)', '다낭':'건기(12~3월)', '하노이':'건기(12~3월)',
+  '방콕':'건기(11~3월)',
+  '발리':'건기+여름(6~8월), 연말',
+  '세부':'건기(12~4월)',
+  '코타키나발루':'12~2월, 6~8월',
+  '타이베이':'한국 여름방학·설·추석·연말', '홍콩':'한국 여름방학·설·추석·연말', '싱가포르':'한국 여름방학·설·추석·연말', '괌':'한국 여름방학·설·추석·연말',
+  '파리':'현지 여름(6~8월)', '이스탄불':'현지 여름(6~8월)',
+  '시드니':'남반구 여름(12~2월)',
+};
+
+// ── 어필리에이트 링크 (기존 계산기와 동일) ────────────────────
+const TRIP_HOTEL={
+  '도쿄':'https://www.trip.com/t/dbCg9RmUEV2','후쿠오카':'https://www.trip.com/t/cuOpRcqUEV2','오사카':'https://www.trip.com/t/fwcWTVsUEV2',
+  '나트랑':'https://www.trip.com/t/5jKU10yUEV2','발리':'https://www.trip.com/t/w41f3IzUEV2','다낭':'https://www.trip.com/t/XQjQOj3VEV2',
+  '방콕':'https://www.trip.com/t/fjPraQ4VEV2','삿포로':'https://www.trip.com/t/zShht85VEV2','타이베이':'https://www.trip.com/t/kkEK9t5VEV2',
+  '괌':'https://www.trip.com/t/uOx2417VEV2','홍콩':'https://www.trip.com/t/2qJapEsPFV2','세부':'https://www.trip.com/t/hxmesvsPFV2',
+  '싱가포르':'https://www.trip.com/t/LWuwKVtPFV2','코타키나발루':'https://www.trip.com/t/KqA1OCuPFV2','하노이':'https://www.trip.com/t/vdGvJquPFV2',
+  '파리':'https://www.trip.com/t/mxdpHOvPFV2','이스탄불':'https://www.trip.com/t/RQhXmxvPFV2','시드니':'https://www.trip.com/t/eU7WBOwPFV2',
+};
+const TRIP_FLIGHT={
+  '도쿄':'https://www.trip.com/t/9VrEvJMVEV2','후쿠오카':'https://www.trip.com/t/Z72XhINVEV2','오사카':'https://www.trip.com/t/W6mcLMPVEV2',
+  '나트랑':'https://www.trip.com/t/kWLyIeQVEV2','발리':'https://www.trip.com/t/KZBU7oRVEV2','다낭':'https://www.trip.com/t/U0cNabSVEV2',
+  '방콕':'https://www.trip.com/t/GLekqATVEV2','삿포로':'https://www.trip.com/t/Tc3cwpTVEV2','타이베이':'https://www.trip.com/t/ytygxMVVEV2',
+  '괌':'https://www.trip.com/t/BVTwT8WVEV2','홍콩':'https://www.trip.com/t/6S6pwWlPFV2','세부':'https://www.trip.com/t/JM2xAxmPFV2',
+  '싱가포르':'https://www.trip.com/t/5ypLSenPFV2','코타키나발루':'https://www.trip.com/t/JuhtDVoPFV2','하노이':'https://www.trip.com/t/URs8qBpPFV2',
+  '파리':'https://www.trip.com/t/VjMHdxpPFV2','이스탄불':'https://www.trip.com/t/UD1ykbqPFV2','시드니':'https://www.trip.com/t/s2haU5rPFV2',
+};
+const AGODA_HOTEL={
+  '도쿄':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=5085',
+  '후쿠오카':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=16527',
+  '오사카':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=9590',
+  '나트랑':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=2679',
+  '발리':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=17193',
+  '다낭':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=16440',
+  '방콕':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=9395',
+  '삿포로':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=3435',
+  '타이베이':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=4951',
+  '괌':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=6126',
+  '홍콩':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=16808',
+  '세부':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=4001',
+  '싱가포르':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=4064',
+  '코타키나발루':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=5070',
+  '하노이':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=2758',
+  '파리':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=15470',
+  '이스탄불':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=14932',
+  '시드니':'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1967605&hl=ko-kr&city=14370',
+};
+
+// ── 환율 ──────────────────────────────
+let KRW=1530;
+async function fetchRate(){
+  try{
+    const r=await fetch('https://open.er-api.com/v6/latest/USD');
+    const j=await r.json();
+    if(j.rates?.KRW){
+      KRW=Math.round(j.rates.KRW);
+      const updated=j.time_last_update_utc?j.time_last_update_utc.slice(0,16):'';
+      document.getElementById('rate-bar').innerHTML=
+        `💱 실시간 환율 <strong>1 USD = ₩${KRW.toLocaleString()}</strong> <span class="rate-live">실시간</span> · 업데이트: ${updated}`;
+      render();
+      return;
+    }
+  }catch{}
+  try{
+    const r=await fetch('https://api.frankfurter.app/latest?from=USD&to=KRW');
+    const j=await r.json();
+    if(j.rates?.KRW){
+      KRW=Math.round(j.rates.KRW);
+      document.getElementById('rate-bar').innerHTML=
+        `💱 실시간 환율 <strong>1 USD = ₩${KRW.toLocaleString()}</strong> <span class="rate-live">실시간</span> · 기준일: ${j.date}`;
+      render();
+      return;
+    }
+  }catch{}
+  document.getElementById('rate-bar').innerHTML=
+    `💱 환율 <strong>1 USD = ₩${KRW.toLocaleString()}</strong> <span class="rate-fallback">네트워크 오류 · 기준값 사용 중</span>`;
+}
+
+// ── 계산 ──────────────────────────────
+const w=krw=>'₩'+Math.round(krw).toLocaleString();
+
+function calcKRW(c,s,d,pax,peakOn){
+  const pm = peakOn ? PEAK_MULT[c.name] : {flight:1,hotel:1};
+  const fl=c.flight[s]*pm.flight*pax;
+  const rm=Math.ceil(pax/2);
+  const nights=Math.max(d-1,1);
+  const ho=c.hotel[s]*pm.hotel*nights*rm;
+  const fo=c.food[s]*d*pax;
+  const tr=c.transport[s]*d*pax;
+  return Math.round((fl+ho+fo+tr)*KRW);
+}
+
+function cityCard(c,mainPrice,subLabel,subPrice,extra){
+  const hoLink=TRIP_HOTEL[c.name]||'https://www.trip.com';
+  const agLink=AGODA_HOTEL[c.name]||'https://www.agoda.com';
+  const flLink=TRIP_FLIGHT[c.name]||'https://www.trip.com';
+  return `<div class="city-card">
+    <div class="city-card-top">
+      <div>
+        <div class="city-name">${c.flag} ${c.name}</div>
+        <div class="city-country">${c.country}</div>
+      </div>
+    </div>
+    <div class="price-row">
+      <div class="price-block price-off"><div class="pl">비수기</div><div class="pv">${w(mainPrice)}</div></div>
+      <div class="price-block price-peak"><div class="pl">${subLabel}</div><div class="pv">${w(subPrice)}</div></div>
+    </div>
+    <div class="peak-season-label">🗓️ 성수기: ${PEAK_LABEL[c.name]}</div>
+    ${extra||''}
+    <div class="city-actions">
+      <a href="${hoLink}" target="_blank" class="btn-trip">🏨 트립닷컴</a>
+      <a href="${agLink}" target="_blank" class="btn-agoda">🏨 아고다</a>
+      <a href="${flLink}" target="_blank" class="btn-flight">✈️ 항공권</a>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const budget=parseInt(document.getElementById('budget').value)||0;
+  const d=parseInt(document.getElementById('days').value)||4;
+  const pax=parseInt(document.getElementById('pax').value)||1;
+  const s=parseInt(document.getElementById('style').value);
+  const rEl=document.getElementById('result');
+
+  if(budget<=0){ rEl.innerHTML='<p class="empty-msg">예산을 입력해주세요 💰</p>'; return; }
+
+  const rows=CITIES.map(c=>{
+    const off=calcKRW(c,s,d,pax,false);
+    const peak=calcKRW(c,s,d,pax,true);
+    return {...c, off, peak};
+  });
+
+  const always = rows.filter(r=>r.peak<=budget).sort((a,b)=>a.peak-b.peak);
+  const timing = rows.filter(r=>r.off<=budget && r.peak>budget).sort((a,b)=>a.off-b.off);
+  const short  = rows.filter(r=>r.off>budget).sort((a,b)=>a.off-b.off).slice(0,3);
+
+  let h='';
+
+  h+=`<div class="group-header group-always"><span class="gtitle">✅ 언제 가도 OK (성수기도 예산 안)</span><span class="gcount">${always.length}곳</span></div>`;
+  h+=`<div class="group-desc">${totPaxLabel(pax)}·${d}일 기준, 성수기에 가도 예산 안에 들어와요</div>`;
+  h += always.length
+    ? always.map(c=>cityCard(c,c.off,'성수기',c.peak)).join('')
+    : `<p class="empty-msg">이 예산으로 성수기까지 여유로운 곳은 아직 없어요</p>`;
+
+  h+=`<div class="group-header group-timing"><span class="gtitle">🔥 시기만 잘 맞추면 (비수기 한정)</span><span class="gcount">${timing.length}곳</span></div>`;
+  h+=`<div class="group-desc">성수기엔 예산 초과지만, 비수기에 가면 딱 맞아요</div>`;
+  h += timing.length
+    ? timing.map(c=>{
+        const diff = c.peak - budget;
+        return cityCard(c,c.off,'성수기',c.peak,`<div class="short-diff">⚠️ 성수기엔 예산보다 ${w(diff)} 더 필요해요</div>`);
+      }).join('')
+    : `<p class="empty-msg">해당하는 여행지가 없어요</p>`;
+
+  h+=`<div class="group-header group-short"><span class="gtitle">❌ 이 예산으론 아직 부족해요</span><span class="gcount">가까운 순 3곳</span></div>`;
+  h+=`<div class="group-desc">조금만 더 모으면 갈 수 있는 곳들이에요</div>`;
+  h += short.length
+    ? short.map(c=>{
+        const diff = c.off - budget;
+        return cityCard(c,c.off,'성수기',c.peak,`<div class="short-diff">💪 ${w(diff)}만 더 모으면 비수기에 갈 수 있어요</div>`);
+      }).join('')
+    : `<p class="empty-msg">모든 여행지가 예산 안에 들어와요! 🎉</p>`;
+
+  rEl.innerHTML=h;
+}
+
+function totPaxLabel(pax){ return `${pax}인`; }
+
+// ── 예산 프리셋 칩 ──────────────────────
+const PRESETS=[300000,500000,800000,1000000,1500000,2000000];
+const chipRow=document.getElementById('chip-row');
+PRESETS.forEach(v=>{
+  const btn=document.createElement('button');
+  btn.className='chip';
+  btn.textContent=(v/10000)+'만원';
+  btn.onclick=()=>{
+    document.getElementById('budget').value=v;
+    [...chipRow.children].forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  };
+  chipRow.appendChild(btn);
+});
+
+['budget','days','pax','style'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',render);
+  document.getElementById(id).addEventListener('change',render);
+});
+
+fetchRate();
+render();
+</script>
+</body>
+</html>
