@@ -24,6 +24,13 @@
   gtag('config', 'G-GX25S16CCF');
 </script>
 <meta name="naver-site-verification" content="fff975c600c56c4cb18991067f03bcaf6d51b8e5" />
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0F1923">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="여행계산기">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -1182,6 +1189,13 @@ function toggleFaq(btn){
 
 fetchRate();
 render();
+
+// ── PWA: 서비스 워커 등록 ──────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>

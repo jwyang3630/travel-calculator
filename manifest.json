@@ -1,0 +1,32 @@
+{
+  "name": "한국인 여행 예산 계산기",
+  "short_name": "여행계산기",
+  "description": "18개 여행지 실시간 환율 여행경비 계산 · 트립닷컴/아고다 최저가 비교",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0F1923",
+  "theme_color": "#0F1923",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
