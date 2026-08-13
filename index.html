@@ -305,18 +305,31 @@ body {
 .tip-blue { background: var(--c-info-bg); color: var(--c-info); }
 .tip-amber { background: #FFF8E1; color: #C07000; border: 1px solid #FFE082; }
 
-/* ── 트립닷컴 배너 ── */
-.tripcom-banner-wrap {
-  margin: 16px 0;
+/* ── 파트너 배너 카드 ── */
+.partner-banner-card { margin-top: 10px; }
+.partner-banner-row {
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   justify-content: center;
 }
-.tripcom-banner-wrap iframe {
-  max-width: 100%;
+.partner-banner-row iframe {
+  border: none;
   width: 300px;
   height: 250px;
-  border: none;
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  flex: 1 1 260px;
 }
+.agoda-banner-embed {
+  flex: 1 1 260px;
+  max-width: 300px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+.agoda-banner-embed > div { max-width: 100%; }
 
 /* ── SHARE ── */
 .share-box {
@@ -562,9 +575,19 @@ footer {
   <div class="metric-grid" id="metrics"></div>
   <div id="result"></div>
 
-  <!-- 트립닷컴 배너 -->
-  <div class="tripcom-banner-wrap">
-    <iframe src="https://kr.trip.com/partners/ad/SB19211733?Allianceid=8847238&SID=320905873&trip_sub1=calc_top" scrolling="no" id="SB19211733" title="Trip.com"></iframe>
+  <!-- 파트너 배너 -->
+  <div class="card partner-banner-card">
+    <h3>🎫 트립닷컴 · 아고다 특가 예약</h3>
+    <div class="partner-banner-row">
+      <iframe src="https://kr.trip.com/partners/ad/SB19211733?Allianceid=8847238&SID=320905873&trip_sub1=calc_top" scrolling="no" id="SB19211733" title="Trip.com"></iframe>
+      <div class="agoda-banner-embed">
+        <div id="adgshp-73426258"></div>
+        <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
+        <script type="text/javascript">
+          var stg = new Object(); stg.crt="7177394537103"; stg.version="1.04"; stg.id=stg.name="adgshp-73426258"; stg.width="300px"; stg.height="300px"; stg.ReferenceKey="SRhiMYlwpzRmB9rnJTCVqA=="; stg.Layout="SquareStatic"; stg.Language="ko-kr"; stg.Cid="1967605"; stg.OverideConf=false; new AgdSherpa(stg,3).initialize();
+        </script>
+      </div>
+    </div>
   </div>
 
   <!-- FAQ -->
