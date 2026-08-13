@@ -298,6 +298,19 @@ body {
 .tip-blue { background: var(--c-info-bg); color: var(--c-info); }
 .tip-amber { background: #FFF8E1; color: #C07000; border: 1px solid #FFE082; }
 
+/* ── 트립닷컴 배너 ── */
+.tripcom-banner-wrap {
+  margin: 16px 0;
+  display: flex;
+  justify-content: center;
+}
+.tripcom-banner-wrap iframe {
+  max-width: 100%;
+  width: 300px;
+  height: 250px;
+  border: none;
+}
+
 /* ── SHARE ── */
 .share-box {
   background: var(--c-card);
@@ -541,6 +554,11 @@ footer {
   <!-- 결과 -->
   <div class="metric-grid" id="metrics"></div>
   <div id="result"></div>
+
+  <!-- 트립닷컴 배너 -->
+  <div class="tripcom-banner-wrap">
+    <iframe src="https://kr.trip.com/partners/ad/SB19211733?Allianceid=8847238&SID=320905873&trip_sub1=calc_top" scrolling="no" id="SB19211733" title="Trip.com"></iframe>
+  </div>
 
   <!-- FAQ -->
   <div class="faq-section">
